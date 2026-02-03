@@ -132,6 +132,7 @@ func handle_correct(btn_node):
 	
 	score += 10
 	update_score()
+	create_confetti()
 	
 	var tween = create_tween()
 	tween.tween_property(btn_node, "scale", Vector2(1.05, 1.05), 0.1)
@@ -139,6 +140,31 @@ func handle_correct(btn_node):
 	
 	await get_tree().create_timer(1.2).timeout
 	next_level()
+
+func create_confetti():
+	var confetti = CPUParticles2D.new()
+	add_child(confetti)
+	confetti.position = Vector2(get_viewport_rect().size.x / 2, get_viewport_rect().size.y / 2)
+	confetti.amount = 50
+	confetti.explosiveness = 1.0
+	confetti.lifetime = 2.0
+	confetti.one_shot = true
+	confetti.spread = 180
+	confetti.gravity = Vector2(0, 500)
+	confetti.initial_velocity_min = 300
+	confetti.initial_velocity_max = 600
+	confetti.scale_amount_min = 10
+	confetti.scale_amount_max = 20
+	confetti.color = Color.CYAN # Base color, but we'll use gradient if possible or random hue
+	
+	# Randomize colors manually by creating multiple emitters or just using a gradient
+	var gradient = Gradient.new()
+	gradient.colors = PackedColorArray([Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.MAGENTA])
+	confetti.color_ramp = gradient
+	
+	confetti.emitting = true
+	await get_tree().create_timer(2.0).timeout
+	confetti.queue_free()
 
 func handle_wrong(btn_node):
 	# Make button Red
@@ -170,3 +196,6 @@ func option_name_to_bbcode(color_name):
 
 func update_score():
 	score_label.text = str(score)
+	if GameManager.update_high_score(score):
+		# Maybe show "NEW HIGH SCORE!" visual?
+		pass

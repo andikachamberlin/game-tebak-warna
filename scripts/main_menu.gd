@@ -4,8 +4,12 @@ extends Control
 @onready var title_label = $CenterContainer/VBoxContainer/TitleBox/TitleLabel
 @onready var start_button = $CenterContainer/VBoxContainer/StartButton
 @onready var quit_button = $CenterContainer/VBoxContainer/QuitButton
+@onready var high_score_label = $CenterContainer/VBoxContainer/HighScoreLabel
 
 func _ready():
+	# Update High Score Display
+	high_score_label.text = "Rekor Tertinggi: " + str(GameManager.high_score)
+	
 	# Animate Title - Floating effect
 	var tween = create_tween().set_loops()
 	tween.tween_property(title_label, "rotation_degrees", 2.0, 1.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
