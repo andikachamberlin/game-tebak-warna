@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://platform8aa"]
+
+[ext_resource type="Script" path="res://scripts/platform.gd" id="1_platform"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
+size = Vector2(150, 30)
+
+[node name="Platform" type="StaticBody2D" groups=["platforms"]]
+script = ExtResource("1_platform")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -75.0
+offset_top = -15.0
+offset_right = 75.0
+offset_bottom = 15.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_platform")

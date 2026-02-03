@@ -94,7 +94,7 @@ theme_override_colors/font_hover_color = Color(1, 0.8, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 theme_override_styles/normal = SubResource("StyleBoxEmpty_btn_start")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_btn_start_pressed")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_btn_start_hover")
@@ -104,17 +104,17 @@ text = "MODEL KLASIK"
 [node name="StroopButton" type="Button" parent="." unique_id=933860415]
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 0
-offset_left = 49.0
-offset_top = 320.0
-offset_right = 259.0
-offset_bottom = 440.0
+offset_left = 41.0
+offset_top = 327.0
+offset_right = 251.0
+offset_bottom = 447.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.4, 0, 0.5, 1)
 theme_override_colors/font_hover_color = Color(0.7, 0.2, 0.8, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 64
+theme_override_font_sizes/font_size = 48
 theme_override_styles/normal = SubResource("StyleBoxEmpty_btn_stroop")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_btn_stroop_pressed")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_btn_stroop_hover")
@@ -134,14 +134,35 @@ theme_override_colors/font_hover_color = Color(0.2, 0.5, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 64
+theme_override_font_sizes/font_size = 48
 theme_override_styles/normal = SubResource("StyleBoxEmpty_btn_object")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_btn_object_pressed")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_btn_object_hover")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_btn_object_hover")
 text = "TEBAK BENDA"
 
+[node name="PlayPlatformerButton" type="Button" parent="." unique_id=987654321]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 0
+offset_left = 21.0
+offset_top = 720.0
+offset_right = 281.0
+offset_bottom = 840.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.7, 0.3, 1)
+theme_override_colors/font_hover_color = Color(0.2, 0.9, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxEmpty_btn_object")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_btn_object_pressed")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_btn_object_hover")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_btn_object_hover")
+text = "MODE GERAKAN"
+
 [connection signal="pressed" from="QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="StroopButton" to="." method="_on_stroop_button_pressed"]
 [connection signal="pressed" from="ObjectButton" to="." method="_on_object_button_pressed"]
+[connection signal="pressed" from="PlayPlatformerButton" to="." method="_on_play_platformer_button_pressed"]

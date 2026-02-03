@@ -6,6 +6,7 @@ extends Control
 @onready var object_button = $ObjectButton
 @onready var quit_button = $QuitButton
 @onready var high_score_label = $HighScoreLabel
+@onready var platformer_button = $PlayPlatformerButton
 
 func _ready():
 	# Update High Score Display
@@ -17,11 +18,13 @@ func setup_buttons():
 	start_button.pivot_offset = start_button.size / 2
 	stroop_button.pivot_offset = stroop_button.size / 2
 	object_button.pivot_offset = object_button.size / 2
+	platformer_button.pivot_offset = platformer_button.size / 2
 	quit_button.pivot_offset = quit_button.size / 2
 	
 	start_button.scale = Vector2.ZERO
 	stroop_button.scale = Vector2.ZERO
 	object_button.scale = Vector2.ZERO
+	platformer_button.scale = Vector2.ZERO
 	quit_button.scale = Vector2.ZERO
 	
 	var tween = create_tween()
@@ -31,6 +34,8 @@ func setup_buttons():
 	tween.tween_property(stroop_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(0.1)
 	tween.tween_property(object_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(0.1)
+	tween.tween_property(platformer_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(0.1)
 	tween.tween_property(quit_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
@@ -46,6 +51,10 @@ func _on_object_button_pressed():
 	GameManager.current_mode = "object"
 	animate_button_press(object_button)
 
+func _on_play_platformer_button_pressed():
+	GameManager.current_mode = "platformer"
+	animate_button_press(platformer_button)
+
 func animate_button_press(btn):
 	var tween = create_tween()
 	tween.tween_property(btn, "scale", Vector2(0.9, 0.9), 0.1)
@@ -53,7 +62,10 @@ func animate_button_press(btn):
 	tween.tween_callback(change_scene)
 
 func change_scene():
-	get_tree().change_scene_to_file("res://scenes/game.tscn")
+	if GameManager.current_mode == "platformer":
+		get_tree().change_scene_to_file("res://scenes/platformer_game.tscn")
+	else:
+		get_tree().change_scene_to_file("res://scenes/game.tscn")
 
 func _on_quit_button_pressed():
 	var tween = create_tween()
