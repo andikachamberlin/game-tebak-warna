@@ -1,23 +1,10 @@
-[gd_scene format=3 uid="uid://dxgmcjma7dmu4"]
+[gd_scene format=3 uid="uid://c874lpwd6wpbl"]
 
-[ext_resource type="Script" path="res://scripts/loading_screen.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/loading.png" id="2_bg"]
+[ext_resource type="Script" uid="uid://bqd31pia1qcyp" path="res://scripts/loading_screen.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bxnklo3jpw0u2" path="res://assets/loading.png" id="2_bg"]
+[ext_resource type="FontFile" uid="uid://c2e7duja1spvc" path="res://assets/fonts/AmaticSC-Bold.ttf" id="3_font"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar_bg"]
-bg_color = Color(1, 1, 1, 0.5)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar_fill"]
-bg_color = Color(0.2, 0.8, 0.2, 1) # Fresh Green
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[node name="LoadingScreen" type="Control"]
+[node name="LoadingScreen" type="Control" unique_id=575339595]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,7 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=1513940327]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,27 +24,25 @@ texture = ExtResource("2_bg")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="Label" type="Label" parent="." unique_id=437065596]
 layout_mode = 1
-anchors_preset = 12
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 50.0
-offset_top = -150.0
-offset_right = -50.0
-offset_bottom = -50.0
+offset_left = -459.0
+offset_top = -1214.0
+offset_right = 521.0
+offset_bottom = -1112.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/separation = 15
-
-[node name="Label" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
-theme_override_font_sizes/font_size = 24
-text = "Loading..."
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 80
+text = "Memuat..."
 horizontal_alignment = 1
 
-
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=826087810]
