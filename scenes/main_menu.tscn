@@ -10,104 +10,128 @@ gradient = SubResource("Gradient_bg")
 fill_from = Vector2(0.5, 0)
 fill_to = Vector2(0.5, 1)
 
+shadow_size = 5
+shadow_offset = Vector2(0, 2)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_start"]
-bg_color = Color(0.2, 0.8, 0.4, 1)
-border_width_bottom = 10
-border_color = Color(0.1, 0.6, 0.3, 1)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
-shadow_color = Color(0, 0, 0, 0.1)
-shadow_size = 20
-shadow_offset = Vector2(0, 10)
+bg_color = Color(1, 0.8, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 16
+border_color = Color(0.8, 0.5, 0, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color(0, 0, 0, 0.2)
+shadow_size = 0
+shadow_offset = Vector2(0, 8)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_start_hover"]
-bg_color = Color(0.25, 0.9, 0.45, 1)
-border_width_bottom = 10
-border_color = Color(0.15, 0.7, 0.35, 1)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
+bg_color = Color(1, 0.85, 0.2, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 16
+border_color = Color(0.8, 0.5, 0, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_start_pressed"]
-bg_color = Color(0.2, 0.8, 0.4, 1)
+bg_color = Color(1, 0.8, 0, 1)
+border_width_left = 4
 border_width_top = 10
+border_width_right = 4
 border_width_bottom = 0
-border_color = Color(0.0, 0.0, 0.0, 0)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
-shadow_size = 5
-shadow_offset = Vector2(0, 2)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+expand_margin_top = 16.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_quit"]
-bg_color = Color(1, 0.3, 0.3, 1)
-border_width_bottom = 10
-border_color = Color(0.8, 0.2, 0.2, 1)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
-shadow_color = Color(0, 0, 0, 0.1)
-shadow_size = 20
-shadow_offset = Vector2(0, 10)
+bg_color = Color(0.9, 0.3, 0.3, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 16
+border_color = Color(0.6, 0.1, 0.1, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color(0, 0, 0, 0.2)
+shadow_size = 0
+shadow_offset = Vector2(0, 8)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_quit_hover"]
-bg_color = Color(1, 0.4, 0.4, 1)
-border_width_bottom = 10
-border_color = Color(0.9, 0.25, 0.25, 1)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
+bg_color = Color(1.0, 0.4, 0.4, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 16
+border_color = Color(0.6, 0.1, 0.1, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_quit_pressed"]
-bg_color = Color(1, 0.3, 0.3, 1)
+bg_color = Color(0.9, 0.3, 0.3, 1)
+border_width_left = 4
 border_width_top = 10
+border_width_right = 4
 border_width_bottom = 0
 border_color = Color(0, 0, 0, 0)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
-shadow_size = 5
-shadow_offset = Vector2(0, 2)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+expand_margin_top = 16.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_stroop"]
-bg_color = Color(0.6, 0.2, 0.8, 1)
-border_width_bottom = 10
-border_color = Color(0.4, 0.1, 0.6, 1)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
-shadow_color = Color(0, 0, 0, 0.1)
-shadow_size = 20
-shadow_offset = Vector2(0, 10)
+bg_color = Color(0.7, 0.2, 0.8, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 16
+border_color = Color(0.4, 0.0, 0.5, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color(0, 0, 0, 0.2)
+shadow_size = 0
+shadow_offset = Vector2(0, 8)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_stroop_hover"]
-bg_color = Color(0.7, 0.3, 0.9, 1)
-border_width_bottom = 10
-border_color = Color(0.5, 0.2, 0.7, 1)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
+bg_color = Color(0.8, 0.3, 0.9, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 16
+border_color = Color(0.4, 0.0, 0.5, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_stroop_pressed"]
-bg_color = Color(0.6, 0.2, 0.8, 1)
+bg_color = Color(0.7, 0.2, 0.8, 1)
+border_width_left = 4
 border_width_top = 10
+border_width_right = 4
 border_width_bottom = 0
 border_color = Color(0, 0, 0, 0)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
-shadow_size = 5
-shadow_offset = Vector2(0, 2)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+expand_margin_top = 16.0
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -171,10 +195,12 @@ text = "Rekor Tertinggi: 0"
 horizontal_alignment = 1
 
 [node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 140)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 48
+theme_override_colors/font_shadow_color = Color(0.5, 0.3, 0, 1)
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 56
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_start")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_start_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_start_pressed")
@@ -186,7 +212,9 @@ text = "MODEL KLASIK"
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 48
+theme_override_colors/font_shadow_color = Color(0.3, 0, 0.4, 1)
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 42
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_stroop")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_stroop_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_stroop_pressed")
