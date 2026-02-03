@@ -7,6 +7,8 @@ extends Control
 @onready var lives_label = $SafeArea/VBox/Header/LivesLabel
 @onready var game_over_overlay = $GameOverOverlay
 @onready var final_score_label = $GameOverOverlay/CenterContainer/VBox/FinalScoreLabel
+@onready var pause_overlay = $PauseOverlay
+@onready var timer_bar = $SafeArea/VBox/TimerBar
 
 var colors = [
 	{"name": "MERAH", "color": Color.RED},
@@ -24,27 +26,64 @@ var colors = [
 var current_question = {}
 var score = 0
 var lives = 3
+var max_time = 15.0
+var current_time = 0.0
+var is_game_active = false
 
 func _ready():
 	game_over_overlay.visible = false
+	pause_overlay.visible = false
+	pause_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
 	new_game()
 
+func _process(delta):
+	if is_game_active and lives > 0:
+		current_time -= delta
+		if current_time <= 0:
+			current_time = 0
+			handle_timeout()
+		
+		# Update UI
+		timer_bar.value = (current_time / max_time) * 100
+		
+		# Color logic for timer (Green -> Red)
+		var style = timer_bar.get_theme_stylebox("fill")
+		if style:
+			# Just simple hardcoded colors for performance, or lerp
+			if current_time < 5.0:
+				style.bg_color = Color(1, 0.3, 0.3)
+			else:
+				style.bg_color = Color(1, 0.8, 0) # Gold/Yellow
+
 func new_game():
+	get_tree().paused = false
 	score = 0
 	lives = 3
 	update_score()
 	update_lives()
 	game_over_overlay.visible = false
+	pause_overlay.visible = false
 	next_level()
 
 func _on_restart_button_pressed():
 	new_game()
 
 func _on_home_button_pressed():
+	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func _on_pause_button_pressed():
+	get_tree().paused = true
+	pause_overlay.visible = true
+
+func _on_resume_button_pressed():
+	get_tree().paused = false
+	pause_overlay.visible = false
 
 func next_level():
 	feedback_label.text = ""
+	current_time = max_time
+	is_game_active = true
 	
 	# Pick random color for current_question
 	var available_colors = colors.duplicate()
@@ -136,11 +175,31 @@ func _on_answer_selected(btn_node, option):
 	# Disable all buttons
 	for child in options_container.get_children():
 		child.disabled = true
-		
+	
+	is_game_active = false
+	
 	if option == current_question:
 		handle_correct(btn_node)
 	else:
 		handle_wrong(btn_node)
+
+func handle_timeout():
+	is_game_active = false
+	feedback_label.text = "[center][shake rate=20 level=10]WAKTU HABIS![/shake][/center]"
+	
+	lives -= 1
+	update_lives()
+	
+	# Disable all buttons
+	for child in options_container.get_children():
+		child.disabled = true
+	
+	await get_tree().create_timer(1.0).timeout
+	
+	if lives <= 0:
+		game_over()
+	else:
+		next_level()
 
 func handle_correct(btn_node):
 	# Make button Green
@@ -152,7 +211,9 @@ func handle_correct(btn_node):
 	
 	feedback_label.text = "[center][wave]BENAR WARNA " + option_name_to_bbcode(current_question["name"]) + "![/wave][/center]"
 	
-	score += 10
+	# Bonus score for speed
+	var bonus = int(current_time)
+	score += 10 + bonus
 	update_score()
 	create_confetti()
 	
@@ -210,8 +271,12 @@ func handle_wrong(btn_node):
 		tween.tween_property(btn_node, "position:x", btn_node.position.x, 0.05)
 		
 		await get_tree().create_timer(1.0).timeout
+		
 		feedback_label.text = ""
-		# Enable buttons again
+		
+		is_game_active = true
+		
+		# Enable buttons again for retry
 		for child in options_container.get_children():
 			child.disabled = false
 
