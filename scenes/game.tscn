@@ -1,6 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://c8q7y5x4k3j2"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_script"]
+[ext_resource type="FontFile" path="res://assets/fonts/AmaticSC-Bold.ttf" id="2_font"]
 
 [sub_resource type="Gradient" id="Gradient_bg"]
 colors = PackedColorArray(0.25, 0.6, 1, 1, 0.4, 0.8, 1, 1)
@@ -115,7 +116,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_score")
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.2)
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 48
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -127,7 +129,8 @@ layout_mode = 2
 [node name="PauseButton" type="Button" parent="SafeArea/VBox/Header"]
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 36
 text = "||"
 
 [connection signal="pressed" from="SafeArea/VBox/Header/PauseButton" to="." method="_on_pause_button_pressed"]
@@ -138,7 +141,8 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.2)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 40
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 60
 text = "WARNA APA INI?"
 horizontal_alignment = 1
 
@@ -162,7 +166,8 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
-theme_override_font_sizes/font_size = 64
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 100
 text = "????"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -171,6 +176,8 @@ uppercase = true
 [node name="FeedbackLabel" type="RichTextLabel" parent="SafeArea/VBox"]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("2_font")
+theme_override_font_sizes/normal_font_size = 60
 bbcode_enabled = true
 text = ""
 fit_content = true
@@ -207,7 +214,8 @@ theme_override_constants/separation = 40
 [node name="Title" type="Label" parent="GameOverOverlay/CenterContainer/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 64
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 100
 text = "PERMAINAN
 SELESAI"
 horizontal_alignment = 1
@@ -215,20 +223,23 @@ horizontal_alignment = 1
 [node name="FinalScoreLabel" type="Label" parent="GameOverOverlay/CenterContainer/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.8, 0, 1)
-theme_override_font_sizes/font_size = 48
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 72
 text = "Nilai Akhir: 100"
 horizontal_alignment = 1
 
 [node name="RestartButton" type="Button" parent="GameOverOverlay/CenterContainer/VBox"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 48
 text = "MAIN LAGI"
 
 [node name="HomeButton" type="Button" parent="GameOverOverlay/CenterContainer/VBox"]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 42
 text = "KELUAR"
 
 [connection signal="pressed" from="GameOverOverlay/CenterContainer/VBox/HomeButton" to="." method="_on_home_button_pressed"]
@@ -266,20 +277,23 @@ theme_override_constants/separation = 30
 [node name="Label" type="Label" parent="PauseOverlay/CenterContainer/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 48
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 72
 text = "JEDA"
 horizontal_alignment = 1
 
 [node name="ResumeButton" type="Button" parent="PauseOverlay/CenterContainer/VBox"]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 42
 text = "LANJUT"
 
 [node name="MenuButton" type="Button" parent="PauseOverlay/CenterContainer/VBox"]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 36
 text = "MENU UTAMA"
 
 [connection signal="pressed" from="PauseOverlay/CenterContainer/VBox/ResumeButton" to="." method="_on_resume_button_pressed"]

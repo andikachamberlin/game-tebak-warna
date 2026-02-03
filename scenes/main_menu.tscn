@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://by7p83acpdr6f" path="res://scripts/main_menu.gd" id="1_menu"]
 [ext_resource type="Texture2D" uid="uid://cfmpacohs3gw6" path="res://assets/main_menu.png" id="2_bg"]
 
+[ext_resource type="FontFile" path="res://assets/fonts/AmaticSC-Bold.ttf" id="3_font"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_start"]
 bg_color = Color(1, 0.8, 0, 1)
 border_width_left = 4
@@ -194,13 +196,14 @@ alignment = 1
 
 [node name="TitleLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TitleBox" unique_id=1978208434]
 clip_contents = false
-custom_minimum_size = Vector2(600, 200)
+custom_minimum_size = Vector2(600, 300)
 layout_mode = 2
 theme_override_colors/default_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.2)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
-theme_override_font_sizes/normal_font_size = 90
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 140
 bbcode_enabled = true
 text = "[center][wave amp=50 freq=2][rainbow freq=0.5 sat=0.8 val=1]TEBAK
 WARNA[/rainbow][/wave][/center]"
@@ -214,7 +217,8 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 0.8)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.1)
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 48
 text = "Rekor Tertinggi: 0"
 horizontal_alignment = 1
 
@@ -222,7 +226,8 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(0, 140)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 56
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 80
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_start")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_start_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_start_hover")
@@ -233,7 +238,8 @@ text = "MODEL KLASIK"
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 42
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 64
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_stroop")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_stroop_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_stroop_hover")
@@ -244,7 +250,8 @@ text = "STROOP TEST"
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 42
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 64
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_object")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_object_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_object_hover")
@@ -255,7 +262,8 @@ text = "TEBAK BENDA"
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 36
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 54
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_quit")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_quit_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_quit_hover")
