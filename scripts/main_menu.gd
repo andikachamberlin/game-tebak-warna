@@ -17,6 +17,12 @@ func _ready():
 	high_score_label.text = "Rekor Tertinggi: " + str(GameManager.high_score)
 	
 	setup_buttons()
+	
+	# Try to play music
+	var bgm_path = "res://assets/music/bgm.mp3" # User should provide this
+	if FileAccess.file_exists(bgm_path):
+		var music = load(bgm_path)
+		AudioManager.play_music(music)
 
 func setup_buttons():
 	start_button.pivot_offset = start_button.size / 2
