@@ -4,6 +4,9 @@ extends Control
 @onready var options_container = $SafeArea/VBox/OptionsContainer
 @onready var feedback_label = $SafeArea/VBox/FeedbackLabel
 @onready var score_label = $SafeArea/VBox/Header/ScorePanel/ScoreLabel
+@onready var lives_label = $SafeArea/VBox/Header/LivesLabel
+@onready var game_over_overlay = $GameOverOverlay
+@onready var final_score_label = $GameOverOverlay/CenterContainer/VBox/FinalScoreLabel
 
 var colors = [
 	{"name": "MERAH", "color": Color.RED},
@@ -20,19 +23,30 @@ var colors = [
 
 var current_question = {}
 var score = 0
+var lives = 3
 
 func _ready():
+	game_over_overlay.visible = false
 	new_game()
 
 func new_game():
 	score = 0
+	lives = 3
 	update_score()
+	update_lives()
+	game_over_overlay.visible = false
 	next_level()
+
+func _on_restart_button_pressed():
+	new_game()
+
+func _on_home_button_pressed():
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 func next_level():
 	feedback_label.text = ""
 	
-	# Pick random color for question
+	# Pick random color for current_question
 	var available_colors = colors.duplicate()
 	if current_question:
 		available_colors.erase(current_question) # Avoid same color twice
@@ -47,14 +61,24 @@ func next_level():
 	)
 	tween.tween_property(color_display, "modulate:a", 1.0, 0.2)
 	
-	# Generate options (1 correct, 2 wrong)
+	# Determine difficulty based on score
+	var num_options = 2
+	if score >= 30:
+		num_options = 3
+	if score >= 80:
+		num_options = 4
+	
+	# Generate options
 	var options = [current_question]
 	var wrong_options = colors.duplicate()
 	wrong_options.erase(current_question)
 	wrong_options.shuffle()
 	
-	options.append(wrong_options[0])
-	options.append(wrong_options[1])
+	# Add wrong options
+	for i in range(num_options - 1):
+		if wrong_options.size() > i:
+			options.append(wrong_options[i])
+	
 	options.shuffle()
 	
 	# Setup buttons
@@ -65,19 +89,17 @@ func next_level():
 		var btn = Button.new()
 		btn.text = option["name"]
 		
-		# Playful Button Styles (Thick Borders, Nice Colors)
+		# Playful Button Styles
 		btn.add_theme_font_size_override("font_size", 28)
 		btn.custom_minimum_size = Vector2(0, 80)
 		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		btn.pivot_offset = Vector2(0, 40) # Approximate center y
+		btn.pivot_offset = Vector2(0, 40) 
 		
-		# Colors for the button (Randomize slightly to make it colorful? Or just consistent White)
-		# Let's use White cards with Thick Grey Border for options
-		
+		# Style Normal
 		var style_normal = StyleBoxFlat.new()
 		style_normal.bg_color = Color.WHITE
 		style_normal.border_width_bottom = 8
-		style_normal.border_color = Color(0.8, 0.8, 0.8) # Light Grey shadow
+		style_normal.border_color = Color(0.8, 0.8, 0.8)
 		style_normal.corner_radius_top_left = 20
 		style_normal.corner_radius_top_right = 20
 		style_normal.corner_radius_bottom_right = 20
@@ -111,7 +133,7 @@ func next_level():
 		options_container.add_child(btn)
 
 func _on_answer_selected(btn_node, option):
-	# Disable all buttons to prevent spam
+	# Disable all buttons
 	for child in options_container.get_children():
 		child.disabled = true
 		
@@ -155,9 +177,8 @@ func create_confetti():
 	confetti.initial_velocity_max = 600
 	confetti.scale_amount_min = 10
 	confetti.scale_amount_max = 20
-	confetti.color = Color.CYAN # Base color, but we'll use gradient if possible or random hue
+	confetti.color = Color.CYAN 
 	
-	# Randomize colors manually by creating multiple emitters or just using a gradient
 	var gradient = Gradient.new()
 	gradient.colors = PackedColorArray([Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.MAGENTA])
 	confetti.color_ramp = gradient
@@ -174,28 +195,39 @@ func handle_wrong(btn_node):
 	btn_node.add_theme_stylebox_override("disabled", style_wrong)
 	btn_node.add_theme_color_override("font_disabled_color", Color.WHITE)
 	
-	feedback_label.text = "[center][shake rate=20 level=10]YAH SALAH TEBAK...[/shake][/center]"
+	lives -= 1
+	update_lives()
 	
-	var tween = create_tween()
-	tween.tween_property(btn_node, "position:x", btn_node.position.x + 15, 0.05)
-	tween.tween_property(btn_node, "position:x", btn_node.position.x - 15, 0.05)
-	tween.tween_property(btn_node, "position:x", btn_node.position.x, 0.05)
-	
-	await get_tree().create_timer(1.0).timeout
-	
-	feedback_label.text = ""
-	
-	# Enable buttons again for retry
-	for child in options_container.get_children():
-		child.disabled = false
-		# Reset style if needed, but since we modify 'disabled' style override, un-disabling it works fine to revert to normal/hover
+	if lives <= 0:
+		feedback_label.text = "[center][shake rate=20 level=10]YAH GAME OVER![/shake][/center]"
+		await get_tree().create_timer(1.0).timeout
+		game_over()
+	else:
+		feedback_label.text = "[center][shake rate=20 level=10]YAH SALAH TEBAK...[/shake][/center]"
+		var tween = create_tween()
+		tween.tween_property(btn_node, "position:x", btn_node.position.x + 15, 0.05)
+		tween.tween_property(btn_node, "position:x", btn_node.position.x - 15, 0.05)
+		tween.tween_property(btn_node, "position:x", btn_node.position.x, 0.05)
+		
+		await get_tree().create_timer(1.0).timeout
+		feedback_label.text = ""
+		# Enable buttons again
+		for child in options_container.get_children():
+			child.disabled = false
+
+func game_over():
+	final_score_label.text = "Nilai Akhir: " + str(score)
+	game_over_overlay.visible = true
+	GameManager.update_high_score(score)
 
 func option_name_to_bbcode(color_name):
-	# Just simple color mapping for text
 	return "[b]" + color_name + "[/b]"
 
 func update_score():
 	score_label.text = str(score)
-	if GameManager.update_high_score(score):
-		# Maybe show "NEW HIGH SCORE!" visual?
-		pass
+
+func update_lives():
+	var heart_str = ""
+	for i in range(lives):
+		heart_str += "❤️"
+	lives_label.text = heart_str
