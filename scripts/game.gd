@@ -1,9 +1,9 @@
 extends Control
 
-@onready var color_display = $SafeArea/CardCenter/GameCard/Margin/Content/ColorDisplayContainer/Margin/ColorDisplay
-@onready var options_container = $SafeArea/CardCenter/GameCard/Margin/Content/OptionsContainer
-@onready var feedback_label = $SafeArea/CardCenter/GameCard/Margin/Content/FeedbackLabel
-@onready var score_label = $SafeArea/TopBar/ScorePanel/Margin/ScoreLabel
+@onready var color_display = $SafeArea/VBox/DisplayContainer/ColorDisplay
+@onready var options_container = $SafeArea/VBox/OptionsContainer
+@onready var feedback_label = $SafeArea/VBox/FeedbackLabel
+@onready var score_label = $SafeArea/VBox/Header/ScorePanel/ScoreLabel
 
 var colors = [
 	{"name": "MERAH", "color": Color.RED},
@@ -43,9 +43,6 @@ func next_level():
 	var tween = create_tween()
 	tween.tween_property(color_display, "modulate:a", 0.0, 0.2)
 	tween.tween_callback(func(): 
-		# Use StyleBoxFlat to set background color (Panel uses stylebox not just .color property directly often)
-		# But since we use a Panel with StyleBoxFlat, we can modify the stylebox resource or just modulate self if it's white
-		# For simplicity, let's assume the StyleBox is white and we modulate the panel
 		color_display.modulate = current_question["color"]
 	)
 	tween.tween_property(color_display, "modulate:a", 1.0, 0.2)
@@ -68,49 +65,47 @@ func next_level():
 		var btn = Button.new()
 		btn.text = option["name"]
 		
-		# Tailwind-like Button Styles
-		# System Font check? No easiest to just rely on styles
-		btn.add_theme_font_size_override("font_size", 16)
-		btn.custom_minimum_size = Vector2(0, 56)
+		# Playful Button Styles (Thick Borders, Nice Colors)
+		btn.add_theme_font_size_override("font_size", 28)
+		btn.custom_minimum_size = Vector2(0, 80)
 		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		btn.pivot_offset = Vector2(0, 40) # Approximate center y
 		
-		# Normal Style (bg-white border-slate-200 rounded-xl)
+		# Colors for the button (Randomize slightly to make it colorful? Or just consistent White)
+		# Let's use White cards with Thick Grey Border for options
+		
 		var style_normal = StyleBoxFlat.new()
 		style_normal.bg_color = Color.WHITE
-		style_normal.set_border_width_all(1)
-		style_normal.border_color = Color("e2e8f0") # slate-200
-		style_normal.corner_radius_top_left = 12
-		style_normal.corner_radius_top_right = 12
-		style_normal.corner_radius_bottom_right = 12
-		style_normal.corner_radius_bottom_left = 12
+		style_normal.border_width_bottom = 8
+		style_normal.border_color = Color(0.8, 0.8, 0.8) # Light Grey shadow
+		style_normal.corner_radius_top_left = 20
+		style_normal.corner_radius_top_right = 20
+		style_normal.corner_radius_bottom_right = 20
+		style_normal.corner_radius_bottom_left = 20
 		style_normal.shadow_color = Color(0, 0, 0, 0.05)
-		style_normal.shadow_size = 2
-		style_normal.shadow_offset = Vector2(0, 1)
+		style_normal.shadow_size = 10
+		style_normal.shadow_offset = Vector2(0, 5)
 		
-		# Hover Style (bg-slate-50 border-indigo-300 text-indigo-600)
 		var style_hover = style_normal.duplicate()
-		style_hover.bg_color = Color("f8fafc") # slate-50
-		style_hover.border_color = Color("a5b4fc") # indigo-300
-		style_hover.shadow_color = Color(0.31, 0.38, 0.97, 0.1) # indigo-500 alpha 0.1
-		style_hover.shadow_size = 4
-		style_hover.shadow_offset = Vector2(0, 2)
+		style_hover.bg_color = Color(0.95, 0.95, 0.95)
 		
-		# Pressed Style (bg-slate-100)
 		var style_pressed = style_normal.duplicate()
-		style_pressed.bg_color = Color("f1f5f9") # slate-100
-		style_pressed.border_color = Color("cbd5e1") # slate-300
-		style_pressed.shadow_size = 0
+		style_pressed.bg_color = Color(0.9, 0.9, 0.9)
+		style_pressed.border_width_top = 8
+		style_pressed.border_width_bottom = 0
+		style_pressed.border_color = Color(0, 0, 0, 0)
+		style_pressed.shadow_size = 2
+		style_pressed.shadow_offset = Vector2(0, 2)
 		
 		btn.add_theme_stylebox_override("normal", style_normal)
 		btn.add_theme_stylebox_override("hover", style_hover)
 		btn.add_theme_stylebox_override("pressed", style_pressed)
-		btn.add_theme_stylebox_override("focus", style_hover) # Focus same as hover
+		btn.add_theme_stylebox_override("focus", style_hover)
 		
 		# Text Colors
-		btn.add_theme_color_override("font_color", Color("334155")) # slate-700
-		btn.add_theme_color_override("font_hover_color", Color("4f46e5")) # indigo-600
-		btn.add_theme_color_override("font_pressed_color", Color("4f46e5"))
-		btn.add_theme_color_override("font_focus_color", Color("4f46e5"))
+		btn.add_theme_color_override("font_color", Color(0.3, 0.3, 0.3))
+		btn.add_theme_color_override("font_hover_color", Color(0.2, 0.2, 0.2))
+		btn.add_theme_color_override("font_pressed_color", Color(0.2, 0.2, 0.2))
 		
 		btn.pressed.connect(_on_answer_selected.bind(btn, option))
 		options_container.add_child(btn)
@@ -126,36 +121,52 @@ func _on_answer_selected(btn_node, option):
 		handle_wrong(btn_node)
 
 func handle_correct(btn_node):
-	btn_node.modulate = Color.GREEN
-	feedback_label.text = "BENAR! YEY!"
-	feedback_label.add_theme_color_override("font_color", Color(0.2, 0.8, 0.2))
+	# Make button Green
+	var style_correct = btn_node.get_theme_stylebox("pressed").duplicate()
+	style_correct.bg_color = Color(0.2, 0.8, 0.4) # Green
+	style_correct.border_color = Color(0.1, 0.6, 0.3)
+	btn_node.add_theme_stylebox_override("disabled", style_correct)
+	btn_node.add_theme_color_override("font_disabled_color", Color.WHITE)
+	
+	feedback_label.text = "[center][wave]BENAR WARNA " + option_name_to_bbcode(current_question["name"]) + "![/wave][/center]"
 	
 	score += 10
 	update_score()
 	
 	var tween = create_tween()
-	tween.tween_property(btn_node, "scale", Vector2(1.1, 1.1), 0.1)
+	tween.tween_property(btn_node, "scale", Vector2(1.05, 1.05), 0.1)
 	tween.tween_property(btn_node, "scale", Vector2(1.0, 1.0), 0.1)
 	
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.2).timeout
 	next_level()
 
 func handle_wrong(btn_node):
-	btn_node.modulate = Color.RED
-	feedback_label.text = "COBA LAGI YA..."
-	feedback_label.add_theme_color_override("font_color", Color(0.8, 0.2, 0.2))
+	# Make button Red
+	var style_wrong = btn_node.get_theme_stylebox("pressed").duplicate()
+	style_wrong.bg_color = Color(1.0, 0.3, 0.3) # Red
+	style_wrong.border_color = Color(0.8, 0.2, 0.2)
+	btn_node.add_theme_stylebox_override("disabled", style_wrong)
+	btn_node.add_theme_color_override("font_disabled_color", Color.WHITE)
+	
+	feedback_label.text = "[center][shake rate=20 level=10]YAH SALAH TEBAK...[/shake][/center]"
 	
 	var tween = create_tween()
-	tween.tween_property(btn_node, "position:x", btn_node.position.x + 10, 0.05)
-	tween.tween_property(btn_node, "position:x", btn_node.position.x - 10, 0.05)
+	tween.tween_property(btn_node, "position:x", btn_node.position.x + 15, 0.05)
+	tween.tween_property(btn_node, "position:x", btn_node.position.x - 15, 0.05)
 	tween.tween_property(btn_node, "position:x", btn_node.position.x, 0.05)
 	
 	await get_tree().create_timer(1.0).timeout
 	
+	feedback_label.text = ""
+	
 	# Enable buttons again for retry
 	for child in options_container.get_children():
 		child.disabled = false
-		child.modulate = Color.WHITE
+		# Reset style if needed, but since we modify 'disabled' style override, un-disabling it works fine to revert to normal/hover
+
+func option_name_to_bbcode(color_name):
+	# Just simple color mapping for text
+	return "[b]" + color_name + "[/b]"
 
 func update_score():
-	score_label.text = "Nilai: " + str(score)
+	score_label.text = str(score)
