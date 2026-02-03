@@ -176,27 +176,7 @@ texture = ExtResource("2_bg")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="TitleLabel" type="RichTextLabel" parent="." unique_id=1978208434]
-clip_contents = false
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -300.0
-offset_top = 150.0
-offset_right = 300.0
-offset_bottom = 450.0
-grow_horizontal = 2
-theme_override_colors/default_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.2)
-theme_override_constants/shadow_offset_x = 5
-theme_override_constants/shadow_offset_y = 5
-theme_override_fonts/normal_font = ExtResource("3_font")
-theme_override_font_sizes/normal_font_size = 140
-bbcode_enabled = true
-text = "[center][wave amp=50 freq=2][rainbow freq=0.5 sat=0.8 val=1]TEBAK
-WARNA[/rainbow][/wave][/center]"
-fit_content = true
+
 
 [node name="QuitButton" type="Button" parent="." unique_id=1943041811]
 custom_minimum_size = Vector2(0, 100)
