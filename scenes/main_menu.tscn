@@ -13,6 +13,46 @@ fill_to = Vector2(0.5, 1)
 shadow_size = 5
 shadow_offset = Vector2(0, 2)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_object"]
+bg_color = Color(0.2, 0.5, 1.0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 16
+border_color = Color(0.1, 0.3, 0.7, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color(0, 0, 0, 0.2)
+shadow_size = 0
+shadow_offset = Vector2(0, 8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_object_hover"]
+bg_color = Color(0.3, 0.6, 1.0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 16
+border_color = Color(0.1, 0.3, 0.7, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_object_pressed"]
+bg_color = Color(0.2, 0.5, 1.0, 1)
+border_width_left = 4
+border_width_top = 10
+border_width_right = 4
+border_width_bottom = 0
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+expand_margin_top = 16.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_start"]
 bg_color = Color(1, 0.8, 0, 1)
 border_width_left = 4
@@ -219,7 +259,21 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_btn_stroop")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_stroop_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_stroop_pressed")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_stroop_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_stroop_hover")
 text = "STROOP TEST"
+
+[node name="ObjectButton" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0.5, 1)
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_object")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_object_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_object_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_object_hover")
+text = "TEBAK BENDA"
 
 [node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
@@ -234,4 +288,5 @@ text = "KELUAR"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/StroopButton" to="." method="_on_stroop_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/ObjectButton" to="." method="_on_object_button_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

@@ -40,6 +40,25 @@ var colors_hard = [
 	{"name": "NILA", "color": Color.INDIGO}
 ]
 
+# Objects Data (Name -> Intrinsic Color)
+var objects_data = [
+	{"name": "PISANG", "answer": "KUNING", "color": Color.YELLOW},
+	{"name": "APEL", "answer": "MERAH", "color": Color.RED},
+	{"name": "LANGIT", "answer": "BIRU", "color": Color.BLUE},
+	{"name": "RUMPUT", "answer": "HIJAU", "color": Color.GREEN},
+	{"name": "AWAN", "answer": "PUTIH", "color": Color.WHITE},
+	{"name": "ARANG", "answer": "HITAM", "color": Color.BLACK},
+	{"name": "JERUK", "answer": "ORANYE", "color": Color("FF8000")},
+	{"name": "ANGGUR", "answer": "UNGU", "color": Color.PURPLE},
+	{"name": "KAYU", "answer": "COKLAT", "color": Color.BROWN},
+	{"name": "DARAH", "answer": "MERAH", "color": Color.RED},
+	{"name": "LAUT", "answer": "BIRU", "color": Color.BLUE},
+	{"name": "DAUN", "answer": "HIJAU", "color": Color.GREEN},
+	{"name": "SUSU", "answer": "PUTIH", "color": Color.WHITE},
+	{"name": "ASPAL", "answer": "HITAM", "color": Color.BLACK},
+	{"name": "TANAH", "answer": "COKLAT", "color": Color.BROWN}
+]
+
 var current_question = {}
 var score = 0
 var lives = 3
@@ -125,32 +144,76 @@ func next_level():
 	elif mode == "stroop":
 		stroop_label.visible = true
 		setup_stroop_round()
+	elif mode == "object":
+		stroop_label.visible = true
+		setup_object_round()
 	
-	# Generate Options (Shared logic mostly, depends on current_question which is the CORRECT ANSWER)
-	var num_options = 2
-	if score >= 10: num_options = 3
-	if score >= 30: num_options = 4
+	# Generate Options
+	var options = []
 	
-	var options = [current_question]
-	var wrong_options = current_level_color_set.duplicate()
-	
-	# FIX: Ensure current_question dict is correctly identified for removal
-	# We need to remove by name or reference match
-	var index_to_remove = -1
-	for i in range(wrong_options.size()):
-		if wrong_options[i]["name"] == current_question["name"]:
-			index_to_remove = i
-			break
-	if index_to_remove != -1:
-		wrong_options.remove_at(index_to_remove)
+	if mode == "object":
+		# For object mode, options are COLORS (Strings/Names), not object dicts
+		# current_question["answer"] is the Correct Color Name
+		var correct_answer_name = current_question["answer"]
 		
-	wrong_options.shuffle()
-	
-	for i in range(num_options - 1):
-		if wrong_options.size() > i:
-			options.append(wrong_options[i])
-	
-	options.shuffle()
+		# Find the full color dict for the correct answer
+		var correct_color_dict = {}
+		for c in colors_easy:
+			if c["name"] == correct_answer_name:
+				correct_color_dict = c
+				break
+		
+		options.append(correct_color_dict)
+		
+		# Wrong options
+		var wrong_pool = colors_easy.duplicate()
+		var wrong_idx = -1
+		for i in range(wrong_pool.size()):
+			if wrong_pool[i]["name"] == correct_answer_name:
+				wrong_idx = i
+				break
+		if wrong_idx != -1:
+			wrong_pool.remove_at(wrong_idx)
+			
+		wrong_pool.shuffle()
+		
+		# Determine Difficulty (Amount of choices)
+		var num_options = 2
+		if score >= 10: num_options = 3
+		if score >= 30: num_options = 4
+		
+		for i in range(num_options - 1):
+			if wrong_pool.size() > i:
+				options.append(wrong_pool[i])
+				
+		options.shuffle()
+		
+	else:
+		# Classic/Stroop logic (unchanged)
+		# Generate Options (Shared logic mostly, depends on current_question which is the CORRECT ANSWER)
+		var num_options = 2
+		if score >= 10: num_options = 3
+		if score >= 30: num_options = 4
+		
+		options = [current_question]
+		var wrong_options = current_level_color_set.duplicate()
+		
+		# FIX: Ensure current_question dict is correctly identified for removal
+		var index_to_remove = -1
+		for i in range(wrong_options.size()):
+			if wrong_options[i]["name"] == current_question["name"]:
+				index_to_remove = i
+				break
+		if index_to_remove != -1:
+			wrong_options.remove_at(index_to_remove)
+			
+		wrong_options.shuffle()
+		
+		for i in range(num_options - 1):
+			if wrong_options.size() > i:
+				options.append(wrong_options[i])
+		
+		options.shuffle()
 	
 	# Setup Buttons
 	for child in options_container.get_children():
@@ -215,6 +278,32 @@ func setup_stroop_round():
 	)
 	tween.tween_property(color_display, "modulate:a", 1.0, 0.1)
 
+func setup_object_round():
+	# Object Mode: Guess the intrinsic color of the object named
+	var available_objects = objects_data.duplicate()
+	
+	current_question = available_objects.pick_random()
+	
+	# Visual Trickery (Level Up)
+	var display_color = Color.WHITE # Default text color
+	
+	if score >= 10:
+		# Twist: Text color is misleading (Stroop effect on Object)
+		var random_color = colors_easy.pick_random()["color"]
+		display_color = random_color
+	else:
+		# Level 1: Helpful color (Text color matches answer)
+		display_color = current_question["color"]
+	
+	# Display Logic
+	var tween = create_tween()
+	tween.tween_property(color_display, "modulate:a", 0.0, 0.1)
+	tween.tween_callback(func(): 
+		color_display.modulate = display_color # Panel/Text Color
+		stroop_label.text = current_question["name"] # Show Object Name
+	)
+	tween.tween_property(color_display, "modulate:a", 1.0, 0.1)
+
 func style_button(btn):
 	btn.add_theme_font_size_override("font_size", 28)
 	btn.custom_minimum_size = Vector2(0, 80)
@@ -260,10 +349,22 @@ func _on_answer_selected(btn_node, option):
 	
 	is_game_active = false
 	
-	if option == current_question:
-		handle_correct(btn_node)
+	if GameManager.current_mode == "object":
+		# In Object Mode:
+		# option is a COLOR DICT (e.g. {"name": "KUNING", "color": ...})
+		# current_question is an OBJECT DICT (e.g. {"name": "PISANG", "answer": "KUNING"})
+		# We must compare option["name"] with current_question["answer"]
+		if option["name"] == current_question["answer"]:
+			handle_correct(btn_node)
+		else:
+			handle_wrong(btn_node)
 	else:
-		handle_wrong(btn_node)
+		# Classic/Stroop Mode:
+		# option and current_question are identical dictionaries (same reference or content)
+		if option == current_question:
+			handle_correct(btn_node)
+		else:
+			handle_wrong(btn_node)
 
 func handle_timeout():
 	is_game_active = false
