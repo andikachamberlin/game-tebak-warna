@@ -11,6 +11,7 @@ extends Control
 @onready var timer_bar = $SafeArea/VBox/TimerBar
 
 @onready var background = $Background # Ensure this node exists or use $SafeArea/..
+@onready var stroop_label = $SafeArea/VBox/DisplayContainer/ColorDisplay/StroopLabel
 
 # Classic Colors (Level 1)
 var colors_easy = [
@@ -102,52 +103,47 @@ func next_level():
 	feedback_label.text = ""
 	is_game_active = true
 	
+	# Determine Difficulty/Mode Settings
+	var mode = GameManager.current_mode
 	
-	# Twist 1: Waktu makin cepat tiap level (Min 3.0 detik)
-	# Start 15s -> berkurang perlahan
+	# Common scaling (Time) - Stroop mode can be slightly more generous or same
 	max_time = max(3.0, 15.0 - (score * 0.1))
 	current_time = max_time
 	
-	# Twist 2: Warna makin mirip & Background mengecoh (Score > 20)
-	if score >= 20:
-		var combined_colors = colors_easy + colors_hard
-		current_level_color_set = combined_colors
-		
-		# Distracting Background (Acak warna background sedikit)
-		# Pastikan node Background ada atau ganti dengan $Background
-		if background:
-			var bg_tween = create_tween()
-			var random_bg = Color(randf(), randf(), randf()).darkened(0.5) 
-			bg_tween.tween_property(background, "modulate", random_bg, 0.5)
+	# Setup Question Pool
+	if score >= 20 or mode == "stroop":
+		current_level_color_set = colors_easy + colors_hard
 	else:
 		current_level_color_set = colors_easy
-		if background:
-			background.modulate = Color.WHITE
 	
-	# Pick Question
-	var available_colors = current_level_color_set.duplicate()
-	if current_question and available_colors.has(current_question):
-		available_colors.erase(current_question)
+	if background:
+		background.modulate = Color.WHITE # Default reset
 	
-	current_question = available_colors.pick_random()
+	if mode == "classic":
+		stroop_label.visible = false
+		setup_classic_round()
+	elif mode == "stroop":
+		stroop_label.visible = true
+		setup_stroop_round()
 	
-	# Animate Display
-	var tween = create_tween()
-	tween.tween_property(color_display, "modulate:a", 0.0, 0.1)
-	tween.tween_callback(func(): 
-		color_display.modulate = current_question["color"]
-	)
-	tween.tween_property(color_display, "modulate:a", 1.0, 0.1)
-	
-	# Determine Difficulty (Amount of choices)
+	# Generate Options (Shared logic mostly, depends on current_question which is the CORRECT ANSWER)
 	var num_options = 2
 	if score >= 10: num_options = 3
 	if score >= 30: num_options = 4
 	
-	# Generate Options
 	var options = [current_question]
 	var wrong_options = current_level_color_set.duplicate()
-	wrong_options.erase(current_question)
+	
+	# FIX: Ensure current_question dict is correctly identified for removal
+	# We need to remove by name or reference match
+	var index_to_remove = -1
+	for i in range(wrong_options.size()):
+		if wrong_options[i]["name"] == current_question["name"]:
+			index_to_remove = i
+			break
+	if index_to_remove != -1:
+		wrong_options.remove_at(index_to_remove)
+		
 	wrong_options.shuffle()
 	
 	for i in range(num_options - 1):
@@ -160,58 +156,102 @@ func next_level():
 	for child in options_container.get_children():
 		child.queue_free()
 	
-	var hide_text_mode = (score >= 40 and randi() % 5 == 0) # Twist 4: 20% chance no text at high levels
+	var hide_text_mode = (mode == "classic" and score >= 40 and randi() % 5 == 0)
 	
 	for option in options:
 		var btn = Button.new()
-		# Twist 4 implementation
 		if hide_text_mode:
 			btn.text = "???"
 		else:
 			btn.text = option["name"]
 		
-		# Playful Button Styles
-		btn.add_theme_font_size_override("font_size", 28)
-		btn.custom_minimum_size = Vector2(0, 80)
-		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		btn.pivot_offset = Vector2(0, 40) 
-		
-		# Style Normal
-		var style_normal = StyleBoxFlat.new()
-		style_normal.bg_color = Color.WHITE
-		style_normal.border_width_bottom = 8
-		style_normal.border_color = Color(0.8, 0.8, 0.8)
-		style_normal.corner_radius_top_left = 20
-		style_normal.corner_radius_top_right = 20
-		style_normal.corner_radius_bottom_right = 20
-		style_normal.corner_radius_bottom_left = 20
-		style_normal.shadow_color = Color(0, 0, 0, 0.05)
-		style_normal.shadow_size = 10
-		style_normal.shadow_offset = Vector2(0, 5)
-		
-		var style_hover = style_normal.duplicate()
-		style_hover.bg_color = Color(0.95, 0.95, 0.95)
-		
-		var style_pressed = style_normal.duplicate()
-		style_pressed.bg_color = Color(0.9, 0.9, 0.9)
-		style_pressed.border_width_top = 8
-		style_pressed.border_width_bottom = 0
-		style_pressed.border_color = Color(0, 0, 0, 0)
-		style_pressed.shadow_size = 2
-		style_pressed.shadow_offset = Vector2(0, 2)
-		
-		btn.add_theme_stylebox_override("normal", style_normal)
-		btn.add_theme_stylebox_override("hover", style_hover)
-		btn.add_theme_stylebox_override("pressed", style_pressed)
-		btn.add_theme_stylebox_override("focus", style_hover)
-		
-		# Text Colors
-		btn.add_theme_color_override("font_color", Color(0.3, 0.3, 0.3))
-		btn.add_theme_color_override("font_hover_color", Color(0.2, 0.2, 0.2))
-		btn.add_theme_color_override("font_pressed_color", Color(0.2, 0.2, 0.2))
+		style_button(btn)
 		
 		btn.pressed.connect(_on_answer_selected.bind(btn, option))
 		options_container.add_child(btn)
+
+func setup_classic_round():
+	# Twist Logic for Classic
+	if score >= 20 and background:
+		var bg_tween = create_tween()
+		var random_bg = Color(randf(), randf(), randf()).darkened(0.5) 
+		bg_tween.tween_property(background, "modulate", random_bg, 0.5)
+	
+	var available_colors = current_level_color_set.duplicate()
+	current_question = available_colors.pick_random()
+	
+	# Display Logic
+	var tween = create_tween()
+	tween.tween_property(color_display, "modulate:a", 0.0, 0.1)
+	tween.tween_callback(func(): 
+		color_display.modulate = current_question["color"]
+	)
+	tween.tween_property(color_display, "modulate:a", 1.0, 0.1)
+
+func setup_stroop_round():
+	# Stroop Logic: Text Name != Text Color (Ink)
+	
+	var available_colors = current_level_color_set.duplicate()
+	current_question = available_colors.pick_random() # This is the INK COLOR (Answer)
+	
+	# Pick a word that creates conflict (Different from Ink Color)
+	var conflicting_words = available_colors.duplicate()
+	var remove_idx = -1
+	for i in range(conflicting_words.size()):
+		if conflicting_words[i]["name"] == current_question["name"]:
+			remove_idx = i
+			break
+	if remove_idx != -1:
+		conflicting_words.remove_at(remove_idx)
+		
+	var distraction = conflicting_words.pick_random() # This is the TEXT shown
+	
+	# Display Logic
+	var tween = create_tween()
+	tween.tween_property(color_display, "modulate:a", 0.0, 0.1)
+	tween.tween_callback(func(): 
+		color_display.modulate = current_question["color"] # Panel becomes Answer Color
+		stroop_label.text = distraction["name"] # Text says something else
+	)
+	tween.tween_property(color_display, "modulate:a", 1.0, 0.1)
+
+func style_button(btn):
+	btn.add_theme_font_size_override("font_size", 28)
+	btn.custom_minimum_size = Vector2(0, 80)
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	btn.pivot_offset = Vector2(0, 40) 
+	
+	var style_normal = StyleBoxFlat.new()
+	style_normal.bg_color = Color.WHITE
+	style_normal.border_width_bottom = 8
+	style_normal.border_color = Color(0.8, 0.8, 0.8)
+	style_normal.corner_radius_top_left = 20
+	style_normal.corner_radius_top_right = 20
+	style_normal.corner_radius_bottom_right = 20
+	style_normal.corner_radius_bottom_left = 20
+	style_normal.shadow_color = Color(0, 0, 0, 0.05)
+	style_normal.shadow_size = 10
+	style_normal.shadow_offset = Vector2(0, 5)
+	
+	var style_hover = style_normal.duplicate()
+	style_hover.bg_color = Color(0.95, 0.95, 0.95)
+	
+	var style_pressed = style_normal.duplicate()
+	style_pressed.bg_color = Color(0.9, 0.9, 0.9)
+	style_pressed.border_width_top = 8
+	style_pressed.border_width_bottom = 0
+	style_pressed.border_color = Color(0, 0, 0, 0)
+	style_pressed.shadow_size = 2
+	style_pressed.shadow_offset = Vector2(0, 2)
+	
+	btn.add_theme_stylebox_override("normal", style_normal)
+	btn.add_theme_stylebox_override("hover", style_hover)
+	btn.add_theme_stylebox_override("pressed", style_pressed)
+	btn.add_theme_stylebox_override("focus", style_hover)
+	
+	btn.add_theme_color_override("font_color", Color(0.3, 0.3, 0.3))
+	btn.add_theme_color_override("font_hover_color", Color(0.2, 0.2, 0.2))
+	btn.add_theme_color_override("font_pressed_color", Color(0.2, 0.2, 0.2))
 
 func _on_answer_selected(btn_node, option):
 	# Disable all buttons

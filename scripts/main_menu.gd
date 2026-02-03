@@ -3,6 +3,7 @@ extends Control
 
 @onready var title_label = $CenterContainer/VBoxContainer/TitleBox/TitleLabel
 @onready var start_button = $CenterContainer/VBoxContainer/StartButton
+@onready var stroop_button = $CenterContainer/VBoxContainer/StroopButton
 @onready var quit_button = $CenterContainer/VBoxContainer/QuitButton
 @onready var high_score_label = $CenterContainer/VBoxContainer/HighScoreLabel
 
@@ -18,26 +19,34 @@ func _ready():
 	setup_buttons()
 
 func setup_buttons():
-	# Add hover/pressed distinct visuals if needed via script, 
-	# but we handled most in Theme. 
-	# Let's add simple popup animation on load for buttons
 	start_button.pivot_offset = start_button.size / 2
+	stroop_button.pivot_offset = stroop_button.size / 2
 	quit_button.pivot_offset = quit_button.size / 2
 	
 	start_button.scale = Vector2.ZERO
+	stroop_button.scale = Vector2.ZERO
 	quit_button.scale = Vector2.ZERO
 	
 	var tween = create_tween()
 	tween.tween_interval(0.2)
-	tween.tween_property(start_button, "scale", Vector2(1, 1), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(start_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(0.1)
-	tween.tween_property(quit_button, "scale", Vector2(1, 1), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(stroop_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(0.1)
+	tween.tween_property(quit_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _on_start_button_pressed():
-	# Button click animation
+	GameManager.current_mode = "classic"
+	animate_button_press(start_button)
+
+func _on_stroop_button_pressed():
+	GameManager.current_mode = "stroop"
+	animate_button_press(stroop_button)
+
+func animate_button_press(btn):
 	var tween = create_tween()
-	tween.tween_property(start_button, "scale", Vector2(0.9, 0.9), 0.1)
-	tween.tween_property(start_button, "scale", Vector2(1, 1), 0.1)
+	tween.tween_property(btn, "scale", Vector2(0.9, 0.9), 0.1)
+	tween.tween_property(btn, "scale", Vector2(1, 1), 0.1)
 	tween.tween_callback(change_scene)
 
 func change_scene():

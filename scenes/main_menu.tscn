@@ -76,6 +76,39 @@ corner_radius_bottom_left = 25
 shadow_size = 5
 shadow_offset = Vector2(0, 2)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_stroop"]
+bg_color = Color(0.6, 0.2, 0.8, 1)
+border_width_bottom = 10
+border_color = Color(0.4, 0.1, 0.6, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 20
+shadow_offset = Vector2(0, 10)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_stroop_hover"]
+bg_color = Color(0.7, 0.3, 0.9, 1)
+border_width_bottom = 10
+border_color = Color(0.5, 0.2, 0.7, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_stroop_pressed"]
+bg_color = Color(0.6, 0.2, 0.8, 1)
+border_width_top = 10
+border_width_bottom = 0
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+shadow_size = 5
+shadow_offset = Vector2(0, 2)
+
 [node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -146,7 +179,19 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_btn_start")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_start_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_start_pressed")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_start_hover")
-text = "MULAI"
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_start_hover")
+text = "MODEL KLASIK"
+
+[node name="StroopButton" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_stroop")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_stroop_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_stroop_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_stroop_hover")
+text = "STROOP TEST"
 
 [node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
@@ -160,4 +205,5 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_btn_quit_hover")
 text = "KELUAR"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/StroopButton" to="." method="_on_stroop_button_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

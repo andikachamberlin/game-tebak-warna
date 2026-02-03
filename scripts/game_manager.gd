@@ -3,6 +3,7 @@ extends Node
 const SAVE_PATH = "user://savegame.save"
 
 var high_score = 0
+var current_mode = "classic" # "classic" or "stroop"
 
 func _ready():
 	load_game()
