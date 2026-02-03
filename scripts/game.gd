@@ -1,6 +1,6 @@
 extends Control
 
-@onready var color_display = $SafeArea/VBox/DisplayContainer/ColorDisplay
+@onready var color_display = $SafeArea/VBox/DisplayContainer/ColorViewport/SubViewport/ColorCube
 @onready var options_container = $SafeArea/VBox/OptionsContainer
 @onready var feedback_label = $SafeArea/VBox/FeedbackLabel
 @onready var score_label = $SafeArea/VBox/Header/ScorePanel/ScoreLabel
@@ -11,7 +11,7 @@ extends Control
 @onready var timer_bar = $SafeArea/VBox/TimerBar
 
 @onready var background = $Background # Ensure this node exists or use $SafeArea/..
-@onready var stroop_label = $SafeArea/VBox/DisplayContainer/ColorDisplay/StroopLabel
+@onready var stroop_label = $SafeArea/VBox/DisplayContainer/ColorViewport/StroopLabel
 
 # Classic Colors (Level 1)
 var colors_easy = [
@@ -100,6 +100,7 @@ func new_game():
 	update_lives()
 	game_over_overlay.visible = false
 	pause_overlay.visible = false
+	# color_display.pivot_offset = Vector2(200, 200) # Not needed for 3D
 	current_level_color_set = colors_easy.duplicate()
 	next_level()
 
@@ -245,12 +246,13 @@ func setup_classic_round():
 	current_question = available_colors.pick_random()
 	
 	# Display Logic
-	var tween = create_tween()
-	tween.tween_property(color_display, "modulate:a", 0.0, 0.1)
-	tween.tween_callback(func(): 
-		color_display.modulate = current_question["color"]
+	# Display Logic - Jelly Animation (3D)
+	color_display.jelly_bounce()
+	
+	# Change color when squashed (approx 0.1s in)
+	get_tree().create_timer(0.1).timeout.connect(func():
+		color_display.set_color(current_question["color"])
 	)
-	tween.tween_property(color_display, "modulate:a", 1.0, 0.1)
 
 func setup_stroop_round():
 	# Stroop Logic: Text Name != Text Color (Ink)
@@ -271,13 +273,13 @@ func setup_stroop_round():
 	var distraction = conflicting_words.pick_random() # This is the TEXT shown
 	
 	# Display Logic
-	var tween = create_tween()
-	tween.tween_property(color_display, "modulate:a", 0.0, 0.1)
-	tween.tween_callback(func(): 
-		color_display.modulate = current_question["color"] # Panel becomes Answer Color
-		stroop_label.text = distraction["name"] # Text says something else
+	# Display Logic - Jelly Animation (3D)
+	color_display.jelly_bounce()
+	
+	get_tree().create_timer(0.1).timeout.connect(func():
+		color_display.set_color(current_question["color"])
+		stroop_label.text = distraction["name"]
 	)
-	tween.tween_property(color_display, "modulate:a", 1.0, 0.1)
 
 func setup_object_round():
 	# Object Mode: Guess the intrinsic color of the object named
@@ -297,13 +299,13 @@ func setup_object_round():
 		display_color = current_question["color"]
 	
 	# Display Logic
-	var tween = create_tween()
-	tween.tween_property(color_display, "modulate:a", 0.0, 0.1)
-	tween.tween_callback(func(): 
-		color_display.modulate = display_color # Panel/Text Color
-		stroop_label.text = current_question["name"] # Show Object Name
+	# Display Logic - Jelly Animation (3D)
+	color_display.jelly_bounce()
+	
+	get_tree().create_timer(0.1).timeout.connect(func():
+		color_display.set_color(display_color)
+		stroop_label.text = current_question["name"]
 	)
-	tween.tween_property(color_display, "modulate:a", 1.0, 0.1)
 
 func style_button(btn):
 	var custom_font = load("res://assets/fonts/AmaticSC-Bold.ttf")

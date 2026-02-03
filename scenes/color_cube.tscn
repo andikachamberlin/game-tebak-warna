@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://cube3dscene"]
+
+[ext_resource type="Script" path="res://scripts/color_cube.gd" id="1_script"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_cube"]
+size = Vector3(1.5, 1.5, 1.5)
+
+[node name="ColorCube" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_cube")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 1.5, 3.5)
+fov = 45.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 0, 5, 0)
+shadow_enabled = true
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3)
+light_energy = 0.5
+omni_range = 10.0

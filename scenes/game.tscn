@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_script"]
 [ext_resource type="FontFile" path="res://assets/fonts/AmaticSC-Bold.ttf" id="2_font"]
+[ext_resource type="PackedScene" uid="uid://cube3dscene" path="res://scenes/color_cube.tscn" id="3_cube"]
 
 [sub_resource type="Gradient" id="Gradient_bg"]
 colors = PackedColorArray(0.25, 0.6, 1, 1, 0.4, 0.8, 1, 1)
@@ -233,18 +234,23 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ColorDisplay" type="Panel" parent="SafeArea/VBox/DisplayContainer"]
+[node name="ColorViewport" type="SubViewportContainer" parent="SafeArea/VBox/DisplayContainer"]
 custom_minimum_size = Vector2(400, 400)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_display")
+stretch = true
 
-[node name="StroopLabel" type="Label" parent="SafeArea/VBox/DisplayContainer/ColorDisplay"]
-layout_mode = 1
-anchors_preset = 15
+[node name="SubViewport" type="SubViewport" parent="SafeArea/VBox/DisplayContainer/ColorViewport"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(400, 400)
+render_target_update_mode = 4
+
+[node name="ColorCube" parent="SafeArea/VBox/DisplayContainer/ColorViewport/SubViewport" instance=ExtResource("3_cube")]
+
+[node name="StroopLabel" type="Label" parent="SafeArea/VBox/DisplayContainer/ColorViewport"]
+layout_mode = 2
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5)
 theme_override_constants/shadow_offset_x = 4
