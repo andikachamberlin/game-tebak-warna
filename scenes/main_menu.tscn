@@ -166,8 +166,29 @@ theme_override_styles/hover = SubResource("StyleBoxEmpty_btn_object_hover")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_btn_object_hover")
 text = "MODE GERAKAN"
 
+[node name="SettingsButton" type="Button" parent="." unique_id=11223344]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 0
+offset_left = 48.0
+offset_top = 1506.0
+offset_right = 245.0
+offset_bottom = 1606.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_colors/font_hover_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = SubResource("FontVariation_bold")
+theme_override_font_sizes/font_size = 54
+theme_override_styles/normal = SubResource("StyleBoxEmpty_btn_quit")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_btn_quit_pressed")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_btn_quit_hover")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_btn_quit_hover")
+text = "PENGATURAN"
+
 [connection signal="pressed" from="QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="StroopButton" to="." method="_on_stroop_button_pressed"]
 [connection signal="pressed" from="ObjectButton" to="." method="_on_object_button_pressed"]
 [connection signal="pressed" from="PlayPlatformerButton" to="." method="_on_play_platformer_button_pressed"]
+[connection signal="pressed" from="SettingsButton" to="." method="_on_settings_button_pressed"]
