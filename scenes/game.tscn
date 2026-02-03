@@ -105,6 +105,13 @@ corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary_hover"]
+bg_color = Color(0.85, 0.85, 0.85, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
 [node name="Game" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -336,7 +343,7 @@ theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 42
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
 text = "MENU UTAMA"
 
 [connection signal="pressed" from="GameOverOverlay/CenterContainer/Card/Margin/VBox/HomeButton" to="." method="_on_home_button_pressed"]
@@ -403,7 +410,7 @@ theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 36
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
 text = "MENU UTAMA"
 
 [connection signal="pressed" from="PauseOverlay/CenterContainer/Card/Margin/VBox/ResumeButton" to="." method="_on_resume_button_pressed"]

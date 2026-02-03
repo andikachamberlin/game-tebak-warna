@@ -308,20 +308,25 @@ func setup_object_round():
 func style_button(btn):
 	var custom_font = load("res://assets/fonts/AmaticSC-Bold.ttf")
 	btn.add_theme_font_override("font", custom_font)
-	btn.add_theme_font_size_override("font_size", 32) # Increased slightly for better visibility
-	btn.custom_minimum_size = Vector2(0, 80)
+	btn.add_theme_font_size_override("font_size", 48) # Significantly larger font
+	
+	# Fake Bold using Outline of same color
+	btn.add_theme_color_override("font_outline_color", Color(0.25, 0.25, 0.25))
+	btn.add_theme_constant_override("outline_size", 2)
+	
+	btn.custom_minimum_size = Vector2(0, 120) # Taller button
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	btn.pivot_offset = Vector2(0, 40) 
+	btn.pivot_offset = Vector2(0, 60) 
 	
 	var style_normal = StyleBoxFlat.new()
 	style_normal.bg_color = Color.WHITE
-	style_normal.border_width_bottom = 8
+	style_normal.border_width_bottom = 10 # Thicker bottom border for 3D feel
 	style_normal.border_color = Color(0.8, 0.8, 0.8)
-	style_normal.corner_radius_top_left = 20
-	style_normal.corner_radius_top_right = 20
-	style_normal.corner_radius_bottom_right = 20
-	style_normal.corner_radius_bottom_left = 20
+	style_normal.corner_radius_top_left = 30
+	style_normal.corner_radius_top_right = 30
+	style_normal.corner_radius_bottom_right = 30
+	style_normal.corner_radius_bottom_left = 30
 	style_normal.shadow_color = Color(0, 0, 0, 0.05)
 	style_normal.shadow_size = 10
 	style_normal.shadow_offset = Vector2(0, 5)
@@ -331,7 +336,7 @@ func style_button(btn):
 	
 	var style_pressed = style_normal.duplicate()
 	style_pressed.bg_color = Color(0.9, 0.9, 0.9)
-	style_pressed.border_width_top = 8
+	style_pressed.border_width_top = 10
 	style_pressed.border_width_bottom = 0
 	style_pressed.border_color = Color(0, 0, 0, 0)
 	style_pressed.shadow_size = 2
@@ -344,10 +349,11 @@ func style_button(btn):
 	# Fix: Set disabled style same as normal so unselected buttons don't change ugly
 	btn.add_theme_stylebox_override("disabled", style_normal)
 	
-	btn.add_theme_color_override("font_color", Color(0.3, 0.3, 0.3))
-	btn.add_theme_color_override("font_hover_color", Color(0.2, 0.2, 0.2))
-	btn.add_theme_color_override("font_pressed_color", Color(0.2, 0.2, 0.2))
-	btn.add_theme_color_override("font_disabled_color", Color(0.3, 0.3, 0.3))
+	# Dark Gray Text for better readability on white button
+	btn.add_theme_color_override("font_color", Color(0.25, 0.25, 0.25))
+	btn.add_theme_color_override("font_hover_color", Color(0.15, 0.15, 0.15))
+	btn.add_theme_color_override("font_pressed_color", Color(0.1, 0.1, 0.1))
+	btn.add_theme_color_override("font_disabled_color", Color(0.25, 0.25, 0.25))
 
 func _on_answer_selected(btn_node, option):
 	# Disable all buttons
@@ -400,6 +406,9 @@ func handle_correct(btn_node):
 	style_correct.border_color = Color(0.1, 0.6, 0.3)
 	btn_node.add_theme_stylebox_override("disabled", style_correct)
 	btn_node.add_theme_color_override("font_disabled_color", Color.WHITE)
+	# Fake Bold for White Text on Green Button
+	btn_node.add_theme_color_override("font_outline_color", Color.WHITE)
+	btn_node.add_theme_constant_override("outline_size", 2)
 	
 	feedback_label.text = "[center][wave][font=res://assets/fonts/AmaticSC-Bold.ttf]BENAR WARNA " + option_name_to_bbcode(current_question["name"]) + "![/font][/wave][/center]"
 	
