@@ -185,6 +185,7 @@ func _on_answer_selected(btn_node, option):
 
 func handle_timeout():
 	is_game_active = false
+	Input.vibrate_handheld(500)
 	feedback_label.text = "[center][shake rate=20 level=10]WAKTU HABIS![/shake][/center]"
 	
 	lives -= 1
@@ -202,6 +203,7 @@ func handle_timeout():
 		next_level()
 
 func handle_correct(btn_node):
+	Input.vibrate_handheld(50)
 	# Make button Green
 	var style_correct = btn_node.get_theme_stylebox("pressed").duplicate()
 	style_correct.bg_color = Color(0.2, 0.8, 0.4) # Green
@@ -249,6 +251,7 @@ func create_confetti():
 	confetti.queue_free()
 
 func handle_wrong(btn_node):
+	Input.vibrate_handheld(400)
 	# Make button Red
 	var style_wrong = btn_node.get_theme_stylebox("pressed").duplicate()
 	style_wrong.bg_color = Color(1.0, 0.3, 0.3) # Red
