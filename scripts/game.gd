@@ -10,25 +10,42 @@ extends Control
 @onready var pause_overlay = $PauseOverlay
 @onready var timer_bar = $SafeArea/VBox/TimerBar
 
-var colors = [
+@onready var background = $Background # Ensure this node exists or use $SafeArea/..
+
+# Classic Colors (Level 1)
+var colors_easy = [
 	{"name": "MERAH", "color": Color.RED},
 	{"name": "BIRU", "color": Color.BLUE},
 	{"name": "HIJAU", "color": Color.GREEN},
 	{"name": "KUNING", "color": Color.YELLOW},
 	{"name": "UNGU", "color": Color.PURPLE},
-	{"name": "ORANYE", "color": Color("FF8000")}, # Orange
+	{"name": "ORANYE", "color": Color("FF8000")},
 	{"name": "HITAM", "color": Color.BLACK},
 	{"name": "PUTIH", "color": Color.WHITE},
-	{"name": "COKLAT", "color": Color.BROWN},
-	{"name": "MERAH MUDA", "color": Color.PINK}
+	{"name": "COKLAT", "color": Color.BROWN}
+]
+
+# Hard Colors (Similar shades - Level 2+)
+var colors_hard = [
+	{"name": "MERAH TUA", "color": Color("8B0000")},
+	{"name": "MERAH BATA", "color": Color("B22222")},
+	{"name": "BIRU LAUT", "color": Color("000080")},
+	{"name": "BIRU LANGIT", "color": Color("87CEEB")},
+	{"name": "HIJAU LUMUT", "color": Color("556B2F")},
+	{"name": "HIJAU MUDA", "color": Color("90EE90")},
+	{"name": "ABU-ABU", "color": Color.GRAY},
+	{"name": "ABU MUDA", "color": Color.LIGHT_GRAY},
+	{"name": "MAGENTA", "color": Color.MAGENTA},
+	{"name": "NILA", "color": Color.INDIGO}
 ]
 
 var current_question = {}
 var score = 0
 var lives = 3
-var max_time = 15.0
+var max_time = 15.0 # Starting time (relaxed)
 var current_time = 0.0
 var is_game_active = false
+var current_level_color_set = []
 
 func _ready():
 	game_over_overlay.visible = false
@@ -49,20 +66,21 @@ func _process(delta):
 		# Color logic for timer (Green -> Red)
 		var style = timer_bar.get_theme_stylebox("fill")
 		if style:
-			# Just simple hardcoded colors for performance, or lerp
-			if current_time < 5.0:
+			if current_time < (max_time * 0.3):
 				style.bg_color = Color(1, 0.3, 0.3)
 			else:
-				style.bg_color = Color(1, 0.8, 0) # Gold/Yellow
+				style.bg_color = Color(1, 0.8, 0)
 
 func new_game():
 	get_tree().paused = false
 	score = 0
 	lives = 3
+	max_time = 15.0
 	update_score()
 	update_lives()
 	game_over_overlay.visible = false
 	pause_overlay.visible = false
+	current_level_color_set = colors_easy.duplicate()
 	next_level()
 
 func _on_restart_button_pressed():
@@ -82,51 +100,75 @@ func _on_resume_button_pressed():
 
 func next_level():
 	feedback_label.text = ""
-	current_time = max_time
 	is_game_active = true
 	
-	# Pick random color for current_question
-	var available_colors = colors.duplicate()
-	if current_question:
-		available_colors.erase(current_question) # Avoid same color twice
+	
+	# Twist 1: Waktu makin cepat tiap level (Min 3.0 detik)
+	# Start 15s -> berkurang perlahan
+	max_time = max(3.0, 15.0 - (score * 0.1))
+	current_time = max_time
+	
+	# Twist 2: Warna makin mirip & Background mengecoh (Score > 20)
+	if score >= 20:
+		var combined_colors = colors_easy + colors_hard
+		current_level_color_set = combined_colors
+		
+		# Distracting Background (Acak warna background sedikit)
+		# Pastikan node Background ada atau ganti dengan $Background
+		if background:
+			var bg_tween = create_tween()
+			var random_bg = Color(randf(), randf(), randf()).darkened(0.5) 
+			bg_tween.tween_property(background, "modulate", random_bg, 0.5)
+	else:
+		current_level_color_set = colors_easy
+		if background:
+			background.modulate = Color.WHITE
+	
+	# Pick Question
+	var available_colors = current_level_color_set.duplicate()
+	if current_question and available_colors.has(current_question):
+		available_colors.erase(current_question)
 	
 	current_question = available_colors.pick_random()
 	
-	# Animate color change
+	# Animate Display
 	var tween = create_tween()
-	tween.tween_property(color_display, "modulate:a", 0.0, 0.2)
+	tween.tween_property(color_display, "modulate:a", 0.0, 0.1)
 	tween.tween_callback(func(): 
 		color_display.modulate = current_question["color"]
 	)
-	tween.tween_property(color_display, "modulate:a", 1.0, 0.2)
+	tween.tween_property(color_display, "modulate:a", 1.0, 0.1)
 	
-	# Determine difficulty based on score
+	# Determine Difficulty (Amount of choices)
 	var num_options = 2
-	if score >= 30:
-		num_options = 3
-	if score >= 80:
-		num_options = 4
+	if score >= 10: num_options = 3
+	if score >= 30: num_options = 4
 	
-	# Generate options
+	# Generate Options
 	var options = [current_question]
-	var wrong_options = colors.duplicate()
+	var wrong_options = current_level_color_set.duplicate()
 	wrong_options.erase(current_question)
 	wrong_options.shuffle()
 	
-	# Add wrong options
 	for i in range(num_options - 1):
 		if wrong_options.size() > i:
 			options.append(wrong_options[i])
 	
 	options.shuffle()
 	
-	# Setup buttons
+	# Setup Buttons
 	for child in options_container.get_children():
 		child.queue_free()
 	
+	var hide_text_mode = (score >= 40 and randi() % 5 == 0) # Twist 4: 20% chance no text at high levels
+	
 	for option in options:
 		var btn = Button.new()
-		btn.text = option["name"]
+		# Twist 4 implementation
+		if hide_text_mode:
+			btn.text = "???"
+		else:
+			btn.text = option["name"]
 		
 		# Playful Button Styles
 		btn.add_theme_font_size_override("font_size", 28)

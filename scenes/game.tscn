@@ -214,6 +214,9 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "KELUAR"
 
+[connection signal="pressed" from="GameOverOverlay/CenterContainer/VBox/HomeButton" to="." method="_on_home_button_pressed"]
+
+
 [connection signal="pressed" from="GameOverOverlay/CenterContainer/VBox/RestartButton" to="." method="_on_restart_button_pressed"]
 [node name="PauseButton" type="Button" parent="GameOverOverlay/CenterContainer/VBox/HomeButton"]
 layout_mode = 0
