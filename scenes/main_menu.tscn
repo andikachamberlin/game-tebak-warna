@@ -186,6 +186,46 @@ theme_override_styles/hover = SubResource("StyleBoxEmpty_btn_object_hover")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_btn_object_hover")
 text = "MODE GERAKAN"
 
+[node name="EmotionButton" type="Button" parent="." unique_id=66778899]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 0
+offset_left = 12.0
+offset_top = 1111.0
+offset_right = 272.0
+offset_bottom = 1231.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.6, 0.2, 0.8, 1)
+theme_override_colors/font_hover_color = Color(0.9, 0.4, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = SubResource("FontVariation_bold")
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxEmpty_btn_object")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_btn_object_pressed")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_btn_object_hover")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_btn_object_hover")
+text = "MODE EMOSI"
+
+[node name="LightButton" type="Button" parent="." unique_id=77889900]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 0
+offset_left = 6.0
+offset_top = 1297.0
+offset_right = 296.0
+offset_bottom = 1417.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.8, 0.8, 0.2, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = SubResource("FontVariation_bold")
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxEmpty_btn_object")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_btn_object_pressed")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_btn_object_hover")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_btn_object_hover")
+text = "MODE CAHAYA"
+
 [node name="SettingsButton" type="Button" parent="." unique_id=11223344]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 0
@@ -212,4 +252,6 @@ text = "PENGATURAN"
 [connection signal="pressed" from="ObjectButton" to="." method="_on_object_button_pressed"]
 [connection signal="pressed" from="StoryButton" to="." method="_on_story_button_pressed"]
 [connection signal="pressed" from="PlayPlatformerButton" to="." method="_on_play_platformer_button_pressed"]
+[connection signal="pressed" from="EmotionButton" to="." method="_on_emotion_button_pressed"]
+[connection signal="pressed" from="LightButton" to="." method="_on_light_button_pressed"]
 [connection signal="pressed" from="SettingsButton" to="." method="_on_settings_button_pressed"]

@@ -6,6 +6,8 @@ extends Control
 @onready var object_button = $ObjectButton
 @onready var story_button = $StoryButton
 @onready var platformer_button = $PlayPlatformerButton
+@onready var emotion_button = $EmotionButton
+@onready var light_button = $LightButton
 @onready var settings_button = $SettingsButton
 @onready var quit_button = $QuitButton
 @onready var high_score_label = $HighScoreLabel
@@ -22,6 +24,8 @@ func setup_buttons():
 	object_button.pivot_offset = object_button.size / 2
 	story_button.pivot_offset = story_button.size / 2
 	platformer_button.pivot_offset = platformer_button.size / 2
+	emotion_button.pivot_offset = emotion_button.size / 2
+	light_button.pivot_offset = light_button.size / 2
 	settings_button.pivot_offset = settings_button.size / 2
 	quit_button.pivot_offset = quit_button.size / 2
 	
@@ -30,6 +34,8 @@ func setup_buttons():
 	object_button.scale = Vector2.ZERO
 	story_button.scale = Vector2.ZERO
 	platformer_button.scale = Vector2.ZERO
+	emotion_button.scale = Vector2.ZERO
+	light_button.scale = Vector2.ZERO
 	settings_button.scale = Vector2.ZERO
 	quit_button.scale = Vector2.ZERO
 	
@@ -44,6 +50,10 @@ func setup_buttons():
 	tween.tween_property(story_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(0.1)
 	tween.tween_property(platformer_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(0.1)
+	tween.tween_property(emotion_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(0.1)
+	tween.tween_property(light_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(0.1)
 	tween.tween_property(settings_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(0.1)
@@ -69,6 +79,14 @@ func _on_play_platformer_button_pressed():
 	GameManager.current_mode = "platformer"
 	animate_button_press(platformer_button)
 
+func _on_emotion_button_pressed():
+	GameManager.current_mode = "emotion"
+	animate_button_press(emotion_button)
+
+func _on_light_button_pressed():
+	GameManager.current_mode = "light"
+	animate_button_press(light_button)
+
 func _on_settings_button_pressed():
 	GameManager.current_mode = "settings"
 	animate_button_press(settings_button)
@@ -84,6 +102,10 @@ func change_scene():
 		get_tree().change_scene_to_file("res://scenes/platformer_game.tscn")
 	elif GameManager.current_mode == "story":
 		get_tree().change_scene_to_file("res://scenes/story_mode.tscn")
+	elif GameManager.current_mode == "emotion":
+		get_tree().change_scene_to_file("res://scenes/emotion_mode.tscn")
+	elif GameManager.current_mode == "light":
+		get_tree().change_scene_to_file("res://scenes/light_mode.tscn")
 	elif GameManager.current_mode == "settings":
 		get_tree().change_scene_to_file("res://scenes/settings.tscn")
 	else:
