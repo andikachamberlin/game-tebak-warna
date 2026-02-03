@@ -428,67 +428,63 @@ func handle_correct(btn_node):
 	next_level()
 
 func create_confetti():
-	var confetti = CPUParticles2D.new()
-	add_child(confetti)
+	# Vibrant Palette for Guaranteed Multicolor Effect
+	var colors = [
+		Color("FF0055"), # Vivid Red/Pink
+		Color("00AAFF"), # Vivid Blue
+		Color("55FF00"), # Vivid Green
+		Color("FFDD00"), # Vivid Yellow
+		Color("AA00FF")  # Vivid Purple
+	]
 	
-	# Generate Round Texture on the fly
+	# Common Round Texture
 	var circle_tex = GradientTexture2D.new()
 	circle_tex.width = 32
 	circle_tex.height = 32
 	circle_tex.fill = GradientTexture2D.FILL_RADIAL
 	circle_tex.fill_from = Vector2(0.5, 0.5)
 	circle_tex.fill_to = Vector2(0.5, 0.0)
-	
 	var circle_grad = Gradient.new()
-	# White center to transparent edge (Hard-ish edge for circle)
 	circle_grad.colors = PackedColorArray([Color.WHITE, Color.WHITE, Color(1, 1, 1, 0)])
 	circle_grad.offsets = PackedFloat32Array([0.0, 0.45, 0.5])
 	circle_tex.gradient = circle_grad
 	
-	confetti.texture = circle_tex
-	
-	# Position: Center of screen
-	confetti.position = Vector2(get_viewport_rect().size.x / 2, get_viewport_rect().size.y / 2)
-	
-	# Confetti Settings
-	confetti.amount = 100
-	confetti.explosiveness = 0.95
-	confetti.lifetime = 3.0
-	confetti.one_shot = true
-	confetti.spread = 180
-	confetti.gravity = Vector2(0, 400)
-	
-	confetti.direction = Vector2(0, -1)
-	confetti.initial_velocity_min = 300
-	confetti.initial_velocity_max = 800
-	
-	confetti.angular_velocity_min = 100.0
-	confetti.angular_velocity_max = 300.0
-	
-	# Scale adjust for 32px texture (make them confetti sized)
-	confetti.scale_amount_min = 0.4
-	confetti.scale_amount_max = 0.8
-	
-	# Rainbow Colors
-	var gradient = Gradient.new()
-	gradient.colors = PackedColorArray([
-		Color("FF0055"), # Vivid Red/Pink
-		Color("00AAFF"), # Vivid Blue
-		Color("55FF00"), # Vivid Green
-		Color("FFDD00"), # Vivid Yellow
-		Color("FF8800"), # Vivid Orange
-		Color("AA00FF")  # Vivid Purple
-	])
-	confetti.color = Color.WHITE
-	confetti.color_ramp = gradient
-	
-	confetti.hue_variation_min = -0.05
-	confetti.hue_variation_max = 0.05
-	
-	confetti.emitting = true
-	
-	await get_tree().create_timer(3.0).timeout
-	confetti.queue_free()
+	# Spawn multiple emitters, one for each color
+	for col in colors:
+		var confetti = CPUParticles2D.new()
+		add_child(confetti)
+		
+		confetti.texture = circle_tex
+		confetti.color = col # Set distinct solid color for this batch
+		
+		# Center Position
+		confetti.position = Vector2(get_viewport_rect().size.x / 2, get_viewport_rect().size.y / 2)
+		
+		# Settings (Amount per color = 25 -> Total 125 particles)
+		confetti.amount = 25
+		confetti.explosiveness = 0.9 + (randf() * 0.1) # Slight variance per color
+		confetti.lifetime = 3.0
+		confetti.one_shot = true
+		confetti.spread = 180
+		
+		# Varied gravity and velocity for natural layering
+		confetti.gravity = Vector2(0, 400 + randf_range(-50, 50))
+		confetti.direction = Vector2(0, -1)
+		confetti.initial_velocity_min = 300
+		confetti.initial_velocity_max = 800
+		
+		# Rotation
+		confetti.angular_velocity_min = 100.0
+		confetti.angular_velocity_max = 300.0
+		
+		# Scale
+		confetti.scale_amount_min = 0.4
+		confetti.scale_amount_max = 0.8
+		
+		confetti.emitting = true
+		
+		# Cleanup
+		get_tree().create_timer(3.5).timeout.connect(confetti.queue_free)
 
 func handle_wrong(btn_node):
 	Input.vibrate_handheld(400)
