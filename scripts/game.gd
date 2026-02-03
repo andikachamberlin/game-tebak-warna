@@ -4,9 +4,9 @@ extends Control
 @onready var options_container = $SafeArea/VBox/OptionsContainer
 @onready var feedback_label = $SafeArea/VBox/FeedbackLabel
 @onready var score_label = $SafeArea/VBox/Header/ScorePanel/ScoreLabel
-@onready var lives_label = $SafeArea/VBox/Header/LivesLabel
+@onready var lives_label = $SafeArea/VBox/Header/LivesPanel/Container/LivesLabel
 @onready var game_over_overlay = $GameOverOverlay
-@onready var final_score_label = $GameOverOverlay/CenterContainer/VBox/FinalScoreLabel
+@onready var final_score_label = $GameOverOverlay/CenterContainer/Card/Margin/VBox/FinalScoreLabel
 @onready var pause_overlay = $PauseOverlay
 @onready var timer_bar = $SafeArea/VBox/TimerBar
 
@@ -219,14 +219,14 @@ func next_level():
 	for child in options_container.get_children():
 		child.queue_free()
 	
-	var hide_text_mode = (mode == "classic" and score >= 40 and randi() % 5 == 0)
+	# var hide_text_mode = (mode == "classic" and score >= 40 and randi() % 5 == 0) # Removing confusing feature
 	
 	for option in options:
 		var btn = Button.new()
-		if hide_text_mode:
-			btn.text = "???"
-		else:
-			btn.text = option["name"]
+		# if hide_text_mode:
+		# 	btn.text = "???"
+		# else:
+		btn.text = option["name"]
 		
 		style_button(btn)
 		
@@ -235,10 +235,11 @@ func next_level():
 
 func setup_classic_round():
 	# Twist Logic for Classic
-	if score >= 20 and background:
-		var bg_tween = create_tween()
-		var random_bg = Color(randf(), randf(), randf()).darkened(0.5) 
-		bg_tween.tween_property(background, "modulate", random_bg, 0.5)
+	# REMOVED: Randomized background color (User requested white background)
+	# if score >= 20 and background:
+	# 	var bg_tween = create_tween()
+	# 	var random_bg = Color(randf(), randf(), randf()).darkened(0.5) 
+	# 	bg_tween.tween_property(background, "modulate", random_bg, 0.5)
 	
 	var available_colors = current_level_color_set.duplicate()
 	current_question = available_colors.pick_random()
@@ -305,8 +306,11 @@ func setup_object_round():
 	tween.tween_property(color_display, "modulate:a", 1.0, 0.1)
 
 func style_button(btn):
-	btn.add_theme_font_size_override("font_size", 28)
+	var custom_font = load("res://assets/fonts/AmaticSC-Bold.ttf")
+	btn.add_theme_font_override("font", custom_font)
+	btn.add_theme_font_size_override("font_size", 32) # Increased slightly for better visibility
 	btn.custom_minimum_size = Vector2(0, 80)
+	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	btn.pivot_offset = Vector2(0, 40) 
 	
@@ -337,10 +341,13 @@ func style_button(btn):
 	btn.add_theme_stylebox_override("hover", style_hover)
 	btn.add_theme_stylebox_override("pressed", style_pressed)
 	btn.add_theme_stylebox_override("focus", style_hover)
+	# Fix: Set disabled style same as normal so unselected buttons don't change ugly
+	btn.add_theme_stylebox_override("disabled", style_normal)
 	
 	btn.add_theme_color_override("font_color", Color(0.3, 0.3, 0.3))
 	btn.add_theme_color_override("font_hover_color", Color(0.2, 0.2, 0.2))
 	btn.add_theme_color_override("font_pressed_color", Color(0.2, 0.2, 0.2))
+	btn.add_theme_color_override("font_disabled_color", Color(0.3, 0.3, 0.3))
 
 func _on_answer_selected(btn_node, option):
 	# Disable all buttons
@@ -394,7 +401,7 @@ func handle_correct(btn_node):
 	btn_node.add_theme_stylebox_override("disabled", style_correct)
 	btn_node.add_theme_color_override("font_disabled_color", Color.WHITE)
 	
-	feedback_label.text = "[center][wave]BENAR WARNA " + option_name_to_bbcode(current_question["name"]) + "![/wave][/center]"
+	feedback_label.text = "[center][wave][font=res://assets/fonts/AmaticSC-Bold.ttf]BENAR WARNA " + option_name_to_bbcode(current_question["name"]) + "![/font][/wave][/center]"
 	
 	# Bonus score for speed
 	var bonus = int(current_time)
@@ -412,25 +419,52 @@ func handle_correct(btn_node):
 func create_confetti():
 	var confetti = CPUParticles2D.new()
 	add_child(confetti)
-	confetti.position = Vector2(get_viewport_rect().size.x / 2, get_viewport_rect().size.y / 2)
-	confetti.amount = 50
-	confetti.explosiveness = 1.0
-	confetti.lifetime = 2.0
-	confetti.one_shot = true
-	confetti.spread = 180
-	confetti.gravity = Vector2(0, 500)
-	confetti.initial_velocity_min = 300
-	confetti.initial_velocity_max = 600
-	confetti.scale_amount_min = 10
-	confetti.scale_amount_max = 20
-	confetti.color = Color.CYAN 
 	
+	# Position: Center of screen approx
+	confetti.position = Vector2(get_viewport_rect().size.x / 2, get_viewport_rect().size.y / 2)
+	
+	# Modern Confetti Settings
+	confetti.amount = 80 # Increased density
+	confetti.explosiveness = 0.9 # Quick burst
+	confetti.lifetime = 3.0
+	confetti.one_shot = true
+	confetti.spread = 180 # Full circle
+	confetti.gravity = Vector2(0, 400) # Fall down
+	
+	confetti.direction = Vector2(0, -1)
+	confetti.initial_velocity_min = 300
+	confetti.initial_velocity_max = 700
+	
+	# Rotation for 2D confetti feel
+	confetti.angular_velocity_min = 100.0
+	confetti.angular_velocity_max = 300.0
+	
+	# Size variation
+	confetti.scale_amount_min = 8.0
+	confetti.scale_amount_max = 16.0
+	
+	# Use squares/rects if we had a texture, but squares by default usage of particles in Godot 4 needs a texture or it's points. 
+	# CPUParticles2D without texture draws squares by default.
+	
+	# Color: Nice pastel/vibrant mix
 	var gradient = Gradient.new()
-	gradient.colors = PackedColorArray([Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.MAGENTA])
+	gradient.colors = PackedColorArray([
+		Color("FF6B6B"), # Red
+		Color("4ECDC4"), # Teal
+		Color("FFE66D"), # Yellow
+		Color("FF9F1C"), # Orange
+		Color("9DABDD")  # Periwinkle
+	])
+	confetti.color = Color.WHITE # Base is white, ramp applies color
 	confetti.color_ramp = gradient
 	
+	# Hue variation for extra randomness
+	confetti.hue_variation_min = -0.1
+	confetti.hue_variation_max = 0.1
+	
 	confetti.emitting = true
-	await get_tree().create_timer(2.0).timeout
+	
+	await get_tree().create_timer(3.0).timeout
 	confetti.queue_free()
 
 func handle_wrong(btn_node):
@@ -446,11 +480,11 @@ func handle_wrong(btn_node):
 	update_lives()
 	
 	if lives <= 0:
-		feedback_label.text = "[center][shake rate=20 level=10]YAH GAME OVER![/shake][/center]"
+		feedback_label.text = "[center][shake rate=20 level=10][font=res://assets/fonts/AmaticSC-Bold.ttf]YAH GAME OVER![/font][/shake][/center]"
 		await get_tree().create_timer(1.0).timeout
 		game_over()
 	else:
-		feedback_label.text = "[center][shake rate=20 level=10]YAH SALAH TEBAK...[/shake][/center]"
+		feedback_label.text = "[center][shake rate=20 level=10][font=res://assets/fonts/AmaticSC-Bold.ttf]YAH SALAH TEBAK...[/font][/shake][/center]"
 		var tween = create_tween()
 		tween.tween_property(btn_node, "position:x", btn_node.position.x + 15, 0.05)
 		tween.tween_property(btn_node, "position:x", btn_node.position.x - 15, 0.05)
