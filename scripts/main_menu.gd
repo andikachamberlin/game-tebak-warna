@@ -1,12 +1,12 @@
 @tool
 extends Control
 
-@onready var title_label = $CenterContainer/VBoxContainer/TitleBox/TitleLabel
-@onready var start_button = $CenterContainer/VBoxContainer/StartButton
-@onready var stroop_button = $CenterContainer/VBoxContainer/StroopButton
-@onready var object_button = $CenterContainer/VBoxContainer/ObjectButton
-@onready var quit_button = $CenterContainer/VBoxContainer/QuitButton
-@onready var high_score_label = $CenterContainer/VBoxContainer/HighScoreLabel
+@onready var title_label = $TitleLabel
+@onready var start_button = $StartButton
+@onready var stroop_button = $StroopButton
+@onready var object_button = $ObjectButton
+@onready var quit_button = $QuitButton
+@onready var high_score_label = $HighScoreLabel
 
 func _ready():
 	# Update High Score Display

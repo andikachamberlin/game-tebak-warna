@@ -2,8 +2,45 @@
 
 [ext_resource type="Script" uid="uid://by7p83acpdr6f" path="res://scripts/main_menu.gd" id="1_menu"]
 [ext_resource type="Texture2D" uid="uid://cfmpacohs3gw6" path="res://assets/main_menu.png" id="2_bg"]
+[ext_resource type="FontFile" uid="uid://c2e7duja1spvc" path="res://assets/fonts/AmaticSC-Bold.ttf" id="3_font"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/AmaticSC-Bold.ttf" id="3_font"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_quit"]
+bg_color = Color(0.9, 0.3, 0.3, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 16
+border_color = Color(0.6, 0.1, 0.1, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color(0, 0, 0, 0.2)
+shadow_offset = Vector2(0, 8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_quit_pressed"]
+bg_color = Color(0.9, 0.3, 0.3, 1)
+border_width_left = 4
+border_width_top = 10
+border_width_right = 4
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+expand_margin_top = 16.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_quit_hover"]
+bg_color = Color(1, 0.4, 0.4, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 16
+border_color = Color(0.6, 0.1, 0.1, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_start"]
 bg_color = Color(1, 0.8, 0, 1)
@@ -119,44 +156,6 @@ corner_radius_top_right = 40
 corner_radius_bottom_right = 40
 corner_radius_bottom_left = 40
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_quit"]
-bg_color = Color(0.9, 0.3, 0.3, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 16
-border_color = Color(0.6, 0.1, 0.1, 1)
-corner_radius_top_left = 40
-corner_radius_top_right = 40
-corner_radius_bottom_right = 40
-corner_radius_bottom_left = 40
-shadow_color = Color(0, 0, 0, 0.2)
-shadow_offset = Vector2(0, 8)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_quit_pressed"]
-bg_color = Color(0.9, 0.3, 0.3, 1)
-border_width_left = 4
-border_width_top = 10
-border_width_right = 4
-border_color = Color(0, 0, 0, 0)
-corner_radius_top_left = 40
-corner_radius_top_right = 40
-corner_radius_bottom_right = 40
-corner_radius_bottom_left = 40
-expand_margin_top = 16.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_quit_hover"]
-bg_color = Color(1, 0.4, 0.4, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 16
-border_color = Color(0.6, 0.1, 0.1, 1)
-corner_radius_top_left = 40
-corner_radius_top_right = 40
-corner_radius_bottom_right = 40
-corner_radius_bottom_left = 40
-
 [node name="MainMenu" type="Control" unique_id=1462287790]
 layout_mode = 3
 anchors_preset = 15
@@ -177,27 +176,17 @@ texture = ExtResource("2_bg")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1941501696]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=326591087]
-custom_minimum_size = Vector2(600, 0)
-layout_mode = 2
-theme_override_constants/separation = 60
-
-[node name="TitleBox" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1754804853]
-layout_mode = 2
-alignment = 1
-
-[node name="TitleLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TitleBox" unique_id=1978208434]
+[node name="TitleLabel" type="RichTextLabel" parent="." unique_id=1978208434]
 clip_contents = false
-custom_minimum_size = Vector2(600, 300)
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 150.0
+offset_right = 300.0
+offset_bottom = 450.0
+grow_horizontal = 2
 theme_override_colors/default_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.2)
 theme_override_constants/shadow_offset_x = 5
@@ -209,58 +198,13 @@ text = "[center][wave amp=50 freq=2][rainbow freq=0.5 sat=0.8 val=1]TEBAK
 WARNA[/rainbow][/wave][/center]"
 fit_content = true
 
-[node name="Spacer" type="Control" parent="CenterContainer/VBoxContainer" unique_id=1908891]
-custom_minimum_size = Vector2(0, 10)
-layout_mode = 2
-
-[node name="HighScoreLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=750179025]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 0.8)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.1)
-theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 48
-text = "Rekor Tertinggi: 0"
-horizontal_alignment = 1
-
-[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=249502190]
-custom_minimum_size = Vector2(0, 140)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 80
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_start")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_start_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_start_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_btn_start_hover")
-text = "MODEL KLASIK"
-
-[node name="StroopButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=933860415]
-custom_minimum_size = Vector2(0, 120)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_stroop")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_stroop_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_stroop_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_btn_stroop_hover")
-text = "STROOP TEST"
-
-[node name="ObjectButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1655294076]
-custom_minimum_size = Vector2(0, 120)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_object")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_object_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_object_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_btn_object_hover")
-text = "TEBAK BENDA"
-
-[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1943041811]
+[node name="QuitButton" type="Button" parent="." unique_id=1943041811]
 custom_minimum_size = Vector2(0, 100)
-layout_mode = 2
+layout_mode = 0
+offset_left = 262.0
+offset_top = 1280.0
+offset_right = 459.0
+offset_bottom = 1380.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_font")
 theme_override_font_sizes/font_size = 54
@@ -270,7 +214,68 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_btn_quit_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_quit_hover")
 text = "KELUAR"
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/StroopButton" to="." method="_on_stroop_button_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ObjectButton" to="." method="_on_object_button_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[node name="HighScoreLabel" type="Label" parent="." unique_id=750179025]
+layout_mode = 0
+offset_left = 243.0
+offset_top = 1012.0
+offset_right = 843.0
+offset_bottom = 1073.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 48
+text = "Rekor Tertinggi: 0"
+horizontal_alignment = 1
+
+[node name="StartButton" type="Button" parent="." unique_id=249502190]
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 0
+offset_left = 524.0
+offset_top = 1079.0
+offset_right = 834.0
+offset_bottom = 1219.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_start")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_start_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_start_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_start_hover")
+text = "MODEL KLASIK"
+
+[node name="StroopButton" type="Button" parent="." unique_id=933860415]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 0
+offset_left = 260.0
+offset_top = 1085.0
+offset_right = 470.0
+offset_bottom = 1205.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_stroop")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_stroop_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_stroop_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_stroop_hover")
+text = "STROOP TEST"
+
+[node name="ObjectButton" type="Button" parent="." unique_id=1655294076]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 0
+offset_left = 543.0
+offset_top = 1259.0
+offset_right = 774.0
+offset_bottom = 1379.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_object")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_object_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_object_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_object_hover")
+text = "TEBAK BENDA"
+
+[connection signal="pressed" from="QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="StroopButton" to="." method="_on_stroop_button_pressed"]
+[connection signal="pressed" from="ObjectButton" to="." method="_on_object_button_pressed"]
