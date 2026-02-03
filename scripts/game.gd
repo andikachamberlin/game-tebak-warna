@@ -506,7 +506,7 @@ func game_over():
 	GameManager.update_high_score(score)
 
 func option_name_to_bbcode(color_name):
-	return "[b]" + color_name + "[/b]"
+	return "[color=#E69500]" + color_name + "[/color]"
 
 func update_score():
 	score_label.text = str(score)
