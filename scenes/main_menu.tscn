@@ -74,12 +74,13 @@ text = "KELUAR"
 
 [node name="HighScoreLabel" type="Label" parent="." unique_id=750179025]
 layout_mode = 0
-offset_left = 141.0
-offset_top = 128.0
-offset_right = 741.0
-offset_bottom = 189.0
+offset_left = 257.0
+offset_top = 107.0
+offset_right = 857.0
+offset_bottom = 168.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
 theme_override_fonts/font = SubResource("FontVariation_bold")
 theme_override_font_sizes/font_size = 48
 text = "Rekor Tertinggi: 0"
