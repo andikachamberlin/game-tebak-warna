@@ -23,7 +23,10 @@ var colors_easy = [
 	{"name": "ORANYE", "color": Color("FF8000")},
 	{"name": "HITAM", "color": Color.BLACK},
 	{"name": "PUTIH", "color": Color.WHITE},
-	{"name": "COKLAT", "color": Color.BROWN}
+	{"name": "COKLAT", "color": Color.BROWN},
+	{"name": "MERAH MUDA", "color": Color("FFC0CB")}, # Pink
+	{"name": "BIRU MUDA", "color": Color("00FFFF")}, # Cyan
+	{"name": "HIJAU LAUT", "color": Color("20B2AA")} # Light Sea Green
 ]
 
 # Hard Colors (Similar shades - Level 2+)
@@ -37,7 +40,19 @@ var colors_hard = [
 	{"name": "ABU-ABU", "color": Color.GRAY},
 	{"name": "ABU MUDA", "color": Color.LIGHT_GRAY},
 	{"name": "MAGENTA", "color": Color.MAGENTA},
-	{"name": "NILA", "color": Color.INDIGO}
+	{"name": "NILA", "color": Color.INDIGO},
+	{"name": "HIJAU LIMAU", "color": Color("32CD32")}, # Lime
+	{"name": "ZAITUN", "color": Color("808000")}, # Olive
+	{"name": "BIRU DONGKER", "color": Color("000080")}, # Navy
+	{"name": "MERAH ATI", "color": Color("800000")}, # Maroon
+	{"name": "HIJAU TOSCA", "color": Color("40E0D0")}, # Turquoise
+	{"name": "KORAL", "color": Color("FF7F50")}, # Coral
+	{"name": "EMAS", "color": Color("FFD700")}, # Gold
+	{"name": "SALEM", "color": Color("FA8072")}, # Salmon
+	{"name": "KAKI", "color": Color("F0E68C")}, # Khaki
+	{"name": "LAVENDER", "color": Color("E6E6FA")}, # Lavender
+	{"name": "KREM", "color": Color("F5F5DC")}, # Beige
+	{"name": "MINT", "color": Color("98FF98")} # Mint
 ]
 
 # Objects Data (Name -> Intrinsic Color)
@@ -131,10 +146,19 @@ func next_level():
 	current_time = max_time
 	
 	# Setup Question Pool
-	if score >= 20 or mode == "stroop":
-		current_level_color_set = colors_easy + colors_hard
+	# Setup Question Pool
+	if score < 10:
+		# Basic Primary Colors (First 4-5)
+		current_level_color_set = colors_easy.slice(0, 4) # R, B, G, Y
+	elif score < 20:
+		# Add Secondary Colors
+		current_level_color_set = colors_easy.slice(0, 9) # + Purple, Orange, Black, White, Brown
+	elif score < 30:
+		# Add New Variations (Pink, Cyan, Teal)
+		current_level_color_set = colors_easy # All Easy colors
 	else:
-		current_level_color_set = colors_easy
+		# Add Hard Colors (Shades)
+		current_level_color_set = colors_easy + colors_hard
 	
 	if background:
 		background.modulate = Color.WHITE # Default reset
