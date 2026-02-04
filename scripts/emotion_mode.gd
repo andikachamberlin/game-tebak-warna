@@ -14,33 +14,46 @@ var lives = 3
 var current_question = {}
 
 # Available colors in buttons
-var colors = [
+# Available colors
+var colors_easy = [
 	{"name": "MERAH", "color": Color.RED},
 	{"name": "HIJAU", "color": Color.GREEN},
 	{"name": "BIRU", "color": Color.BLUE},
-	{"name": "KUNING", "color": Color(1, 0.8, 0)}, # Yellow
+	{"name": "KUNING", "color": Color(1, 0.8, 0)},
 	{"name": "UNGU", "color": Color(0.6, 0.2, 0.8)},
 	{"name": "HITAM", "color": Color.BLACK},
-	{"name": "PUTIH", "color": Color.WHITE}
+	{"name": "PUTIH", "color": Color.WHITE},
+	{"name": "ORANYE", "color": Color("FF8000")},
+	{"name": "COKLAT", "color": Color.BROWN}
+]
+
+var colors_hard = [
+	{"name": "MERAH MUDA", "color": Color("FFC0CB")}, # Pink/Love
+	{"name": "ABU-ABU", "color": Color.GRAY}, # Neutral/Sad
+	{"name": "EMAS", "color": Color("FFD700")}, # Luxury/Victory
+	{"name": "BIRU MUDA", "color": Color("00FFFF")}, # Calm/Cold
+	{"name": "HIJAU TUA", "color": Color("006400")}, # Nature/Ency
+	{"name": "MERAH TUA", "color": Color("8B0000")} # Anger/Danger
 ]
 
 # Questions dataset
-var questions = [
+# Questions dataset
+var questions_easy = [
 	{
 		"text": "Warna apa yang terasa DINGIN?",
-		"answers": ["BIRU", "PUTIH", "UNGU"],
+		"answers": ["BIRU", "PUTIH", "UNGU", "BIRU MUDA"],
 		"valid_explanation": "Betul! Warna sejuk seperti es!",
 		"wrong_explanation": "Hmm, itu terasa hangat bagi banyak orang."
 	},
 	{
 		"text": "Warna apa yang terasa MARAH?",
-		"answers": ["MERAH", "HITAM"],
+		"answers": ["MERAH", "HITAM", "MERAH TUA"],
 		"valid_explanation": "Ya! Seperti api kemarahan!",
 		"wrong_explanation": "Itu lebih terasa tenang atau ceria."
 	},
 	{
 		"text": "Warna apa yang terasa TENANG?",
-		"answers": ["HIJAU", "BIRU", "PUTIH"],
+		"answers": ["HIJAU", "BIRU", "PUTIH", "BIRU MUDA"],
 		"valid_explanation": "Benar, seperti alam atau langit.",
 		"wrong_explanation": "Warna itu terlalu bersemangat untuk tenang."
 	},
@@ -52,15 +65,90 @@ var questions = [
 	},
 	{
 		"text": "Warna apa yang terasa BAHAGIA?",
-		"answers": ["KUNING", "HIJAU", "BIRU"],
+		"answers": ["KUNING", "HIJAU", "BIRU", "ORANYE", "MERAH MUDA"],
 		"valid_explanation": "Ceria sekali warnanya!",
 		"wrong_explanation": "Warna itu agak gelap untuk bahagia."
 	},
 	{
 		"text": "Warna apa yang terasa MISTERIUS?",
-		"answers": ["UNGU", "HITAM"],
+		"answers": ["UNGU", "HITAM", "ABU-ABU"],
 		"valid_explanation": "Sangat misterius...",
 		"wrong_explanation": "Itu terlalu terang untuk misteri."
+	},
+	{
+		"text": "Warna apa yang terasa BERANI?",
+		"answers": ["MERAH", "HITAM", "ORANYE"],
+		"valid_explanation": "Gagah dan berani!",
+		"wrong_explanation": "Warna itu terlihat pemalu."
+	},
+	{
+		"text": "Warna apa yang terasa SEGAR?",
+		"answers": ["HIJAU", "KUNING", "BIRU MUDA", "ORANYE"],
+		"valid_explanation": "Segar seperti buah atau daun!",
+		"wrong_explanation": "Itu terasa agak layu atau gelap."
+	}
+]
+
+var questions_hard = [
+	{
+		"text": "Warna apa yang terasa CINTA?",
+		"answers": ["MERAH MUDA", "MERAH"],
+		"valid_explanation": "Romantis sekali!",
+		"wrong_explanation": "Kurang romantis rasanya."
+	},
+	{
+		"text": "Warna apa yang terasa SEDIH?",
+		"answers": ["BIRU", "ABU-ABU", "HITAM"],
+		"valid_explanation": "Melankolis dan sendu.",
+		"wrong_explanation": "Itu terlalu ceria untuk sedih."
+	},
+	{
+		"text": "Warna apa yang terasa KAYA / MEWAH?",
+		"answers": ["EMAS", "UNGU", "HITAM", "MERAH TUA"],
+		"valid_explanation": "Elegan dan mahal!",
+		"wrong_explanation": "Terlihat biasa saja."
+	},
+	{
+		"text": "Warna apa yang terasa SAKIT?",
+		"answers": ["HIJAU", "KUNING", "ABU-ABU"], # Green/Yellow often associated with sickness/nausea in cartoons
+		"valid_explanation": "Pucat dan tidak sehat.",
+		"wrong_explanation": "Itu terlihat sehat dan bugar."
+	},
+	{
+		"text": "Warna apa yang terasa MANIS?",
+		"answers": ["MERAH MUDA", "UNGU", "ORANYE"],
+		"valid_explanation": "Manis seperti permen!",
+		"wrong_explanation": "Rasanya pahit atau tawar."
+	},
+	{
+		"text": "Warna apa yang terasa IRI HATI?",
+		"answers": ["HIJAU", "HIJAU TUA"], # Green with envy
+		"valid_explanation": "Hijau karena cemburu!",
+		"wrong_explanation": "Bukan warna cemburu."
+	},
+	{
+		"text": "Warna apa yang terasa SUCI / BERSIH?",
+		"answers": ["PUTIH", "BIRU MUDA"],
+		"valid_explanation": "Murni dan bersih.",
+		"wrong_explanation": "Terlihat kotor atau gelap."
+	},
+	{
+		"text": "Warna apa yang terasa BERACUN?",
+		"answers": ["UNGU", "HIJAU", "HIJAU TUA"],
+		"valid_explanation": "Awas berbahaya!",
+		"wrong_explanation": "Itu terlihat aman dimakan."
+	},
+	{
+		"text": "Warna apa yang terasa TUA / KUNO?",
+		"answers": ["COKLAT", "ABU-ABU", "EMAS"],
+		"valid_explanation": "Klasik dan antik.",
+		"wrong_explanation": "Terlihat terlalu modern."
+	},
+	{
+		"text": "Warna apa yang terasa LEMAH?",
+		"answers": ["ABU-ABU", "PUTIH", "BIRU MUDA"],
+		"valid_explanation": "Lembut dan rapuh.",
+		"wrong_explanation": "Itu terlihat kuat!"
 	}
 ]
 
@@ -78,7 +166,12 @@ func next_level():
 	feedback_label.text = ""
 	explanation_label.text = ""
 	
-	current_question = questions.pick_random()
+	# Select question pool
+	var pool = questions_easy
+	if score >= 10:
+		pool += questions_hard
+	
+	current_question = pool.pick_random()
 	emotion_label.text = current_question["text"]
 	
 	setup_buttons()
@@ -87,8 +180,13 @@ func setup_buttons():
 	for child in buttons_container.get_children():
 		child.queue_free()
 	
+	# Determine available colors based on score
+	var available_colors = colors_easy.duplicate()
+	if score >= 10:
+		available_colors += colors_hard
+	
 	# Pick 4 random colors to show choices
-	var choices = colors.duplicate()
+	var choices = available_colors.duplicate()
 	choices.shuffle()
 	choices = choices.slice(0, 4)
 	
@@ -104,7 +202,7 @@ func setup_buttons():
 		# Find a correct color from full list
 		var correct_color_name = current_question["answers"].pick_random()
 		var correct_color_data
-		for c in colors:
+		for c in available_colors:
 			if c["name"] == correct_color_name:
 				correct_color_data = c
 				break
