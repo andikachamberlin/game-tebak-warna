@@ -27,6 +27,33 @@ fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.5, 0)
 metadata/_snap_enabled = true
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause_normal"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 5
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause_pressed"]
+bg_color = Color(0.9, 0.9, 0.9, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause_hover"]
+bg_color = Color(0.95, 0.95, 0.95, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_color = Color(0, 0, 0, 0.15)
+shadow_size = 8
+shadow_offset = Vector2(0, 6)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 30
@@ -58,24 +85,17 @@ texture = SubResource("GradientTexture2D_sky")
 [node name="Player" parent="." unique_id=1552090206 instance=ExtResource("2_player")]
 position = Vector2(0, -100)
 
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=2128924080]
+limit_left = -700
+limit_right = 700
+limit_bottom = 200
+position_smoothing_enabled = true
+
 [node name="DeathBarrier" type="StaticBody2D" parent="." unique_id=12345]
 position = Vector2(0, 700)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DeathBarrier"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeathBarrier" unique_id=556424578]
 shape = SubResource("RectangleShape2D_floor")
-
-[node name="Line" type="ColorRect" parent="DeathBarrier"]
-offset_left = -1000.0
-offset_top = -50.0
-offset_right = 1000.0
-offset_bottom = -48.0
-color = Color(0, 0, 0, 1)
-
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=2128924080]
-limit_left = -1000
-limit_right = 1000
-limit_bottom = 800
-position_smoothing_enabled = true
 
 [node name="MobileControls" type="CanvasLayer" parent="." unique_id=174897534]
 layer = 10
@@ -168,10 +188,10 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -200.0
-offset_top = 50.0
-offset_right = -50.0
-offset_bottom = 150.0
+offset_left = -334.0
+offset_top = 59.0
+offset_right = -184.0
+offset_bottom = 159.0
 grow_horizontal = 0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_font")
@@ -179,7 +199,7 @@ theme_override_font_sizes/font_size = 64
 text = "0"
 horizontal_alignment = 2
 
-[node name="LivesLabel" type="Label" parent="CanvasLayer/HUD"]
+[node name="LivesLabel" type="Label" parent="CanvasLayer/HUD" unique_id=578710640]
 layout_mode = 0
 offset_left = 50.0
 offset_top = 50.0
@@ -190,20 +210,26 @@ theme_override_fonts/font = ExtResource("3_font")
 theme_override_font_sizes/font_size = 48
 text = "❤️❤️❤️"
 
-[node name="PauseButton" type="Button" parent="CanvasLayer/HUD"]
+[node name="PauseButton" type="Button" parent="CanvasLayer/HUD" unique_id=2007428677]
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -100.0
-offset_top = 150.0
-offset_right = -50.0
-offset_bottom = 200.0
+offset_left = -85.0
+offset_top = 71.0
+offset_right = -25.0
+offset_bottom = 131.0
 grow_horizontal = 0
+theme_override_colors/font_color = Color(0.3, 0.3, 0.3, 1)
+theme_override_fonts/font = ExtResource("3_font")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_pause_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pause_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pause_hover")
 text = "II"
 
-[node name="PauseOverlay" type="ColorRect" parent="CanvasLayer"]
+[node name="PauseOverlay" type="ColorRect" parent="CanvasLayer" unique_id=2140760165]
 process_mode = 3
 visible = false
 anchors_preset = 15
@@ -213,7 +239,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.4)
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseOverlay" unique_id=902235145]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -221,23 +247,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Card" type="PanelContainer" parent="CanvasLayer/PauseOverlay/CenterContainer"]
+[node name="Card" type="PanelContainer" parent="CanvasLayer/PauseOverlay/CenterContainer" unique_id=281527417]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer/PauseOverlay/CenterContainer/Card"]
+[node name="Margin" type="MarginContainer" parent="CanvasLayer/PauseOverlay/CenterContainer/Card" unique_id=938364208]
 layout_mode = 2
 theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 40
 
-[node name="VBox" type="VBoxContainer" parent="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin"]
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin" unique_id=1032096632]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="Label" type="Label" parent="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox"]
+[node name="Label" type="Label" parent="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox" unique_id=1406625307]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
 theme_override_fonts/font = ExtResource("3_font")
@@ -245,23 +271,19 @@ theme_override_font_sizes/font_size = 72
 text = "JEDA"
 horizontal_alignment = 1
 
-[node name="ResumeButton" type="Button" parent="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox"]
+[node name="ResumeButton" type="Button" parent="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox" unique_id=1119185810]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_font")
 theme_override_font_sizes/font_size = 42
 text = "LANJUT"
 
-[node name="MenuButton" type="Button" parent="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox"]
+[node name="MenuButton" type="Button" parent="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox" unique_id=312133500]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_font")
 theme_override_font_sizes/font_size = 36
 text = "MENU UTAMA"
-
-[connection signal="pressed" from="CanvasLayer/HUD/PauseButton" to="." method="_on_pause_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox/ResumeButton" to="." method="_on_resume_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox/MenuButton" to="." method="_on_main_menu_button_pressed"]
 
 [node name="GameOverPanel" type="PanelContainer" parent="CanvasLayer" unique_id=1377197301]
 visible = false
@@ -287,3 +309,7 @@ theme_override_constants/margin_bottom = 30
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
+
+[connection signal="pressed" from="CanvasLayer/HUD/PauseButton" to="." method="_on_pause_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox/MenuButton" to="." method="_on_main_menu_button_pressed"]

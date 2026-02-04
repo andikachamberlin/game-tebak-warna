@@ -20,9 +20,18 @@ func _physics_process(delta):
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
+	# Prevent player from going below the floor (stricter clamp)
+	if position.y > 650:
+		position.y = 650
+		velocity.y = min(velocity.y, 0) # Don't allow downward movement
+	
 	move_and_slide()
 	
-	# Prevent player from going below the floor
+	# Clamp horizontal position to camera boundaries
+	# Camera limits: left=-700, right=700, viewport width ~1080, so visible range is ~540px each side
+	position.x = clamp(position.x, -450, 450)
+	
+	# Double-check vertical position after physics movement
 	if position.y > 650:
 		position.y = 650
 		velocity.y = 0
