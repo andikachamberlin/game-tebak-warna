@@ -1,6 +1,6 @@
 extends Control
 
-@onready var object_rect = $SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer/ObjectRect
+@onready var color_display = $SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer/ColorViewport/SubViewport/ColorCube
 @onready var light_overlay = $SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer/LightOverlay
 @onready var prompt_label = $SafeArea/VBox/DisplayContainer/VBoxContainer/PromptLabel
 @onready var condition_label = $SafeArea/VBox/DisplayContainer/VBoxContainer/ConditionLabel
@@ -72,8 +72,13 @@ func next_level():
 		"condition": condition
 	}
 	
-	object_rect.color = object_data["color"]
-	object_rect.modulate = condition["tint"]
+	# Apply 3D Cube Color and Tint
+	color_display.set_color(object_data["color"])
+	# Use modulate on the ViewportContainer or Cube to tint it
+	$SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer/ColorViewport.modulate = condition["tint"]
+	
+	# Play Jelly Animation
+	color_display.jelly_bounce()
 	
 	condition_label.text = condition["desc"] + "\n(" + condition["name"] + ")"
 	
@@ -106,18 +111,21 @@ func setup_buttons():
 		
 		btn.text = color_data["name"]
 		
-		# Load Font
+		# Load Font and Add BOLD Outline
 		var font_file = load("res://assets/fonts/AmaticSC-Bold.ttf")
 		btn.add_theme_font_override("font", font_file)
 		btn.add_theme_font_size_override("font_size", 40)
+		btn.add_theme_constant_override("outline_size", 2) # Adding Outline for Bold effect
 		
 		if color_data["color"].get_luminance() > 0.5:
 			btn.add_theme_color_override("font_color", Color.BLACK)
+			btn.add_theme_color_override("font_outline_color", Color.BLACK) # Bold same color
 		else:
 			btn.add_theme_color_override("font_color", Color.WHITE)
+			btn.add_theme_color_override("font_outline_color", Color.BLACK) # White text, Black outline for contrast
 			
 		# Connect SFX
-		btn.mouse_entered.connect(AudioManager.play_button_hover)
+		# btn.mouse_entered.connect(AudioManager.play_button_hover) # Disabled per user request
 		btn.pressed.connect(AudioManager.play_button_click)
 		
 		btn.pressed.connect(_on_answer_selected.bind(color_data))
@@ -139,7 +147,8 @@ func handle_correct():
 	feedback_label.modulate = Color.GREEN
 	
 	var tween = create_tween()
-	tween.tween_property(object_rect, "modulate", Color.WHITE, 0.5)
+	# Remove tint to reveal true color
+	tween.tween_property($SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer/ColorViewport, "modulate", Color.WHITE, 0.5)
 	
 	update_score(score + 1)
 	
@@ -152,7 +161,8 @@ func handle_wrong():
 	feedback_label.modulate = Color.RED
 	
 	var tween = create_tween()
-	tween.tween_property(object_rect, "modulate", Color.WHITE, 0.5)
+	# Remove tint to reveal true color
+	tween.tween_property($SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer/ColorViewport, "modulate", Color.WHITE, 0.5)
 	
 	lives -= 1
 	update_lives_ui()

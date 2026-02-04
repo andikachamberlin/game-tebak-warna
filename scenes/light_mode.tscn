@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://scripts/light_mode.gd" id="1_light"]
 [ext_resource type="Texture2D" uid="uid://cfmpacohs3gw6" path="res://assets/main_menu.png" id="2_bg"]
 [ext_resource type="FontFile" uid="uid://c2e7duja1spvc" path="res://assets/fonts/AmaticSC-Bold.ttf" id="3_font"]
+[ext_resource type="PackedScene" uid="uid://dm5d6d6g7q5g" path="res://scenes/color_cube.tscn" id="4_cube"]
 
 [sub_resource type="FontVariation" id="FontVariation_bold"]
 base_font = ExtResource("3_font")
@@ -211,34 +212,42 @@ text = "Di tempat gelap..."
 horizontal_alignment = 1
 
 [node name="ObjectContainer" type="Control" parent="SafeArea/VBox/DisplayContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 300)
+custom_minimum_size = Vector2(0, 600)
 layout_mode = 2
 
-[node name="ObjectRect" type="ColorRect" parent="SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer"]
-custom_minimum_size = Vector2(300, 300)
+[node name="ColorViewport" type="SubViewportContainer" parent="SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -150.0
-offset_right = 150.0
-offset_bottom = 150.0
+offset_left = -300.0
+offset_top = -300.0
+offset_right = 300.0
+offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(300, 300)
+
+[node name="SubViewport" type="SubViewport" parent="SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer/ColorViewport"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(600, 600)
+render_target_update_mode = 4
+
+[node name="ColorCube" parent="SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer/ColorViewport/SubViewport" instance=ExtResource("4_cube")]
 
 [node name="LightOverlay" type="ColorRect" parent="SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer"]
 visible = false
-custom_minimum_size = Vector2(300, 300)
+custom_minimum_size = Vector2(600, 600)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
+offset_left = -300.0
 offset_top = -150.0
 offset_right = 150.0
 offset_bottom = 150.0

@@ -44,7 +44,7 @@ func _setup_buses():
 		AudioServer.set_bus_send(count, "Master")
 		
 		# Set default Music volume to 50%
-		AudioServer.set_bus_volume_db(count, linear_to_db(0.5))
+		AudioServer.set_bus_volume_db(count, linear_to_db(0.2))
 	
 	# Create SFX Bus if it doesn't exist
 	if AudioServer.get_bus_index("SFX") == -1:
