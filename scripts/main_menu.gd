@@ -25,45 +25,22 @@ func _ready():
 		AudioManager.play_music(music)
 
 func setup_buttons():
-	start_button.pivot_offset = start_button.size / 2
-	stroop_button.pivot_offset = stroop_button.size / 2
-	object_button.pivot_offset = object_button.size / 2
-	story_button.pivot_offset = story_button.size / 2
-	platformer_button.pivot_offset = platformer_button.size / 2
-	emotion_button.pivot_offset = emotion_button.size / 2
-	light_button.pivot_offset = light_button.size / 2
-	settings_button.pivot_offset = settings_button.size / 2
-	quit_button.pivot_offset = quit_button.size / 2
+	var buttons = [
+		start_button, stroop_button, object_button, story_button, 
+		platformer_button, emotion_button, light_button, 
+		settings_button, quit_button
+	]
 	
-	start_button.scale = Vector2.ZERO
-	stroop_button.scale = Vector2.ZERO
-	object_button.scale = Vector2.ZERO
-	story_button.scale = Vector2.ZERO
-	platformer_button.scale = Vector2.ZERO
-	emotion_button.scale = Vector2.ZERO
-	light_button.scale = Vector2.ZERO
-	settings_button.scale = Vector2.ZERO
-	quit_button.scale = Vector2.ZERO
+	for btn in buttons:
+		btn.scale = Vector2.ZERO
 	
 	var tween = create_tween()
-	tween.tween_interval(0.2)
-	tween.tween_property(start_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(0.1)
-	tween.tween_property(stroop_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(0.1)
-	tween.tween_property(object_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(0.1)
-	tween.tween_property(story_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(0.1)
-	tween.tween_property(platformer_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(0.1)
-	tween.tween_property(emotion_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(0.1)
-	tween.tween_property(light_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(0.1)
-	tween.tween_property(settings_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(0.1)
-	tween.tween_property(quit_button, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.set_parallel(true)
+	
+	var delay = 0.0
+	for btn in buttons:
+		tween.tween_property(btn, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(delay)
+		delay += 0.05
 
 func _on_start_button_pressed():
 	GameManager.current_mode = "classic"

@@ -61,6 +61,7 @@ limit_right = 1000
 position_smoothing_enabled = true
 
 [node name="MobileControls" type="CanvasLayer" parent="." unique_id=174897534]
+layer = 10
 
 [node name="LeftButton" type="TouchScreenButton" parent="MobileControls" unique_id=897343317]
 position = Vector2(50, 1750)
