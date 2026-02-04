@@ -13,11 +13,14 @@ fill_from = Vector2(0.5, 0)
 fill_to = Vector2(0.5, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_score"]
-bg_color = Color(0.15, 0.15, 0.2, 1)
+bg_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 30
 corner_radius_top_right = 30
 corner_radius_bottom_right = 30
 corner_radius_bottom_left = 30
+shadow_color = Color(0, 0, 0, 0.05)
+shadow_size = 10
+shadow_offset = Vector2(0, 4)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_display"]
 bg_color = Color(1, 1, 1, 1)
@@ -73,11 +76,14 @@ shadow_color = Color(0, 0, 0, 0)
 shadow_offset = Vector2(0, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lives"]
-bg_color = Color(0.15, 0.15, 0.2, 1)
+bg_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 30
 corner_radius_top_right = 30
 corner_radius_bottom_right = 30
 corner_radius_bottom_left = 30
+shadow_color = Color(0, 0, 0, 0.05)
+shadow_size = 10
+shadow_offset = Vector2(0, 4)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
 bg_color = Color(1, 1, 1, 1)
@@ -191,8 +197,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_score")
 
 [node name="ScoreLabel" type="Label" parent="SafeArea/VBox/Header/ScorePanel"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.2)
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 48
 text = "0"
