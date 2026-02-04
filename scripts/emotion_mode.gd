@@ -113,9 +113,13 @@ func setup_buttons():
 			choices[0] = correct_color_data
 			choices.shuffle()
 	
+	buttons_container.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	
 	for color_data in choices:
 		var btn = Button.new()
 		btn.custom_minimum_size = Vector2(250, 150)
+		btn.pivot_offset = Vector2(125, 75)
+		btn.scale = Vector2.ZERO
 		
 		var style = StyleBoxFlat.new()
 		style.bg_color = color_data["color"]
@@ -129,6 +133,10 @@ func setup_buttons():
 		
 		btn.pressed.connect(_on_color_selected.bind(color_data))
 		buttons_container.add_child(btn)
+		
+		# Jelly/Elastic Animation
+		var tween = create_tween()
+		tween.tween_property(btn, "scale", Vector2(1, 1), 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 func _on_color_selected(selected_color_data):
 	var answer = selected_color_data["name"]

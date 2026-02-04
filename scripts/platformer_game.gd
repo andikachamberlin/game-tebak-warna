@@ -101,7 +101,7 @@ func _on_player_landed(platform):
 func game_over():
 	is_game_over = true
 	game_over_panel.show()
-	$CanvasLayer/GameOverPanel/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
+ 	$CanvasLayer/GameOverPanel/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
 	GameManager.update_high_score(score)
 
 func _on_restart_button_pressed():

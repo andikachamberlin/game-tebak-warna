@@ -86,9 +86,13 @@ func setup_buttons():
 	var answers = colors.duplicate()
 	answers.shuffle()
 	
+	buttons_container.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	
 	for color_data in answers:
 		var btn = Button.new()
 		btn.custom_minimum_size = Vector2(250, 100)
+		btn.pivot_offset = Vector2(125, 50)
+		btn.scale = Vector2.ZERO
 		
 		var style = StyleBoxFlat.new()
 		style.bg_color = color_data["color"]
@@ -101,6 +105,12 @@ func setup_buttons():
 		btn.add_theme_stylebox_override("pressed", style)
 		
 		btn.text = color_data["name"]
+		
+		# Load Font
+		var font_file = load("res://assets/fonts/AmaticSC-Bold.ttf")
+		btn.add_theme_font_override("font", font_file)
+		btn.add_theme_font_size_override("font_size", 40)
+		
 		if color_data["color"].get_luminance() > 0.5:
 			btn.add_theme_color_override("font_color", Color.BLACK)
 		else:
@@ -108,6 +118,10 @@ func setup_buttons():
 			
 		btn.pressed.connect(_on_answer_selected.bind(color_data))
 		buttons_container.add_child(btn)
+		
+		# Jelly/Elastic Animation
+		var tween = create_tween()
+		tween.tween_property(btn, "scale", Vector2(1, 1), 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 func _on_answer_selected(selected_color):
 	if selected_color["name"] == current_round["object"]["name"]:
