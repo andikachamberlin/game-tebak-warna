@@ -71,7 +71,16 @@ var objects_data = [
 	{"name": "DAUN", "answer": "HIJAU", "color": Color.GREEN},
 	{"name": "SUSU", "answer": "PUTIH", "color": Color.WHITE},
 	{"name": "ASPAL", "answer": "HITAM", "color": Color.BLACK},
-	{"name": "TANAH", "answer": "COKLAT", "color": Color.BROWN}
+	{"name": "TANAH", "answer": "COKLAT", "color": Color.BROWN},
+	{"name": "FLAMINGO", "answer": "MERAH MUDA", "color": Color("FFC0CB")},
+	{"name": "EMAS", "answer": "KUNING", "color": Color.YELLOW},
+	{"name": "WORTEL", "answer": "ORANYE", "color": Color("FF8000")},
+	{"name": "BROKOLI", "answer": "HIJAU", "color": Color.GREEN},
+	{"name": "LUMBA-LUMBA", "answer": "ABU-ABU", "color": Color.GRAY},
+	{"name": "COKLAT", "answer": "COKLAT", "color": Color.BROWN},
+	{"name": "BLUEBERRY", "answer": "BIRU", "color": Color.BLUE},
+	{"name": "GULALI", "answer": "MERAH MUDA", "color": Color("FFC0CB")},
+	{"name": "ES BALOK", "answer": "PUTIH", "color": Color.WHITE}
 ]
 
 var current_question = {}
@@ -190,7 +199,8 @@ func next_level():
 		
 		# Find the full color dict for the correct answer
 		var correct_color_dict = {}
-		for c in colors_easy:
+		var all_colors = colors_easy + colors_hard
+		for c in all_colors:
 			if c["name"] == correct_answer_name:
 				correct_color_dict = c
 				break
@@ -198,7 +208,7 @@ func next_level():
 		options.append(correct_color_dict)
 		
 		# Wrong options
-		var wrong_pool = colors_easy.duplicate()
+		var wrong_pool = (colors_easy + colors_hard).duplicate()
 		var wrong_idx = -1
 		for i in range(wrong_pool.size()):
 			if wrong_pool[i]["name"] == correct_answer_name:
