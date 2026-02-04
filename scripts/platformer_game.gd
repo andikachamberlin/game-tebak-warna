@@ -69,8 +69,13 @@ func _process(_delta):
 	if player.position.y < last_platform_y + 1000:
 		spawn_platform(last_platform_y - platform_spacing)
 	
-	if player.position.y > 600: # Falling below start
-		handle_death()
+	# Keep the "Floor" at the bottom of the screen
+	# If player goes up, the barrier follows but stays at a distance
+	var barrier_y = player.position.y + 600
+	if $DeathBarrier.position.y > barrier_y: # Only move it up, don't let it fall back
+		$DeathBarrier.position.y = barrier_y
+	elif $DeathBarrier.position.y < barrier_y - 200: # Keep it close enough if player falls
+		$DeathBarrier.position.y = barrier_y - 200
 
 func spawn_initial_platforms():
 	# Ground platform
@@ -123,9 +128,16 @@ func _on_player_landed(platform):
 		tween.tween_property(hud_label, "scale", Vector2(1.2, 1.2), 0.1)
 		tween.tween_property(hud_label, "scale", Vector2(1.0, 1.0), 0.1)
 	else:
-		# Wrong color: Regular small bounce to allow climbing
-		# No life loss here anymore, only for falling!
-		player.velocity.y = -600
+		# Wrong color: Lose a life!
+		AudioManager.play_failed()
+		lives -= 1
+		update_lives()
+		
+		if lives <= 0:
+			game_over()
+		else:
+			# Small bounce to give player chance to recover
+			player.velocity.y = -600
 
 func handle_death():
 	AudioManager.play_failed()

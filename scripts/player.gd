@@ -10,7 +10,7 @@ func _physics_process(delta):
 		velocity.y += GRAVITY * delta
 
 	# Handle Jump
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+	if Input.is_action_just_pressed("ui_accept"):
 		velocity.y = JUMP_VELOCITY
 
 	# Get the input direction and handle the movement/deceleration.
@@ -21,6 +21,11 @@ func _physics_process(delta):
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
 	move_and_slide()
+	
+	# Prevent player from going below the floor
+	if position.y > 650:
+		position.y = 650
+		velocity.y = 0
 	
 	# Check for collisions
 	for i in get_slide_collision_count():
