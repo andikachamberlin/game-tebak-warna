@@ -241,7 +241,6 @@ func setup_classic_round():
 	# 	var bg_tween = create_tween()
 	# 	var random_bg = Color(randf(), randf(), randf()).darkened(0.5) 
 	# 	bg_tween.tween_property(background, "modulate", random_bg, 0.5)
-	
 	var available_colors = current_level_color_set.duplicate()
 	current_question = available_colors.pick_random()
 	
@@ -256,7 +255,6 @@ func setup_classic_round():
 
 func setup_stroop_round():
 	# Stroop Logic: Text Name != Text Color (Ink)
-	
 	var available_colors = current_level_color_set.duplicate()
 	current_question = available_colors.pick_random() # This is the INK COLOR (Answer)
 	
@@ -319,7 +317,7 @@ func style_button(btn):
 	btn.custom_minimum_size = Vector2(0, 120) # Taller button
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	btn.pivot_offset = Vector2(0, 60) 
+	btn.pivot_offset = Vector2(0, 60)
 	
 	var style_normal = StyleBoxFlat.new()
 	style_normal.bg_color = Color.WHITE
@@ -401,6 +399,7 @@ func handle_timeout():
 		next_level()
 
 func handle_correct(btn_node):
+	AudioManager.play_success()
 	Input.vibrate_handheld(50)
 	# Make button Green
 	var style_correct = btn_node.get_theme_stylebox("pressed").duplicate()
@@ -434,7 +433,7 @@ func create_confetti():
 		Color("00AAFF"), # Vivid Blue
 		Color("55FF00"), # Vivid Green
 		Color("FFDD00"), # Vivid Yellow
-		Color("AA00FF")  # Vivid Purple
+		Color("AA00FF") # Vivid Purple
 	]
 	
 	# Common Round Texture
@@ -487,6 +486,7 @@ func create_confetti():
 		get_tree().create_timer(3.5).timeout.connect(confetti.queue_free)
 
 func handle_wrong(btn_node):
+	AudioManager.play_failed()
 	Input.vibrate_handheld(400)
 	# Make button Red
 	var style_wrong = btn_node.get_theme_stylebox("pressed").duplicate()
