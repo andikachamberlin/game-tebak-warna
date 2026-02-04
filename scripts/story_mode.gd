@@ -1,15 +1,18 @@
 extends Control
 
-@onready var story_label = $CenterContainer/VBoxContainer/StoryLabel
-@onready var buttons_container = $CenterContainer/VBoxContainer/ButtonsGrid
-@onready var score_label = $HUD/ScoreLabel
-@onready var feedback_label = $CenterContainer/VBoxContainer/FeedbackLabel
+@onready var story_label = $SafeArea/VBox/DisplayContainer/VBoxContainer/StoryLabel
+@onready var buttons_container = $SafeArea/VBox/DisplayContainer/VBoxContainer/ButtonsGrid
+@onready var score_label = $SafeArea/VBox/Header/ScorePanel/ScoreLabel
+@onready var feedback_label = $SafeArea/VBox/DisplayContainer/VBoxContainer/FeedbackLabel
+@onready var lives_label = $SafeArea/VBox/Header/LivesPanel/Container/LivesLabel
 @onready var game_over_panel = $GameOverPanel
+@onready var pause_overlay = $PauseOverlay
 
 # Resources
 var font_resource = preload("res://assets/fonts/AmaticSC-Bold.ttf")
 
 var score = 0
+var lives = 3
 var current_quest = {}
 var colors = [
 	{"name": "MERAH", "color": Color.RED, "hex": "RED"},
@@ -19,7 +22,6 @@ var colors = [
 ]
 
 # Quest templates
-# Type: "PICK" (Choose the Target color), "AVOID" (Choose any BUT Target color)
 var templates = [
 	{"text": "Monster ini alergi warna {color}!\nJangan beri dia warna itu!", "type": "AVOID"},
 	{"text": "Raja ingin jubah warna {color}!\nCari warnanya!", "type": "PICK"},
@@ -32,13 +34,15 @@ var templates = [
 func _ready():
 	randomize()
 	game_over_panel.hide()
+	pause_overlay.hide()
+	lives = 3
+	update_lives_ui()
 	update_score(0)
 	next_level()
 
 func next_level():
 	feedback_label.text = ""
 	
-	# Generate Quest
 	var template = templates.pick_random()
 	var target_color_data = colors.pick_random()
 	
@@ -49,22 +53,12 @@ func next_level():
 	}
 	
 	story_label.text = current_quest["text"]
-	# Colorize the color name in the text for emphasis? 
-	# For simplicity, we assume the text is clear. 
-	# Optionally use RichTextLabel but Label is easier for now.
-	
 	setup_buttons()
 
 func setup_buttons():
-	# Clear existing buttons
 	for child in buttons_container.get_children():
 		child.queue_free()
 	
-	# Create 4 buttons with random colors from our list
-	# To make "AVOID" tricky, we must include the target color.
-	# To make "PICK" possible, we must include the target color.
-	
-	# Shuffle colors
 	var shuffled_colors = colors.duplicate()
 	shuffled_colors.shuffle()
 	
@@ -72,16 +66,12 @@ func setup_buttons():
 		var btn = Button.new()
 		btn.custom_minimum_size = Vector2(250, 150)
 		
-		# Style
 		var style = StyleBoxFlat.new()
 		style.bg_color = color_data["color"]
 		style.set_corner_radius_all(20)
 		btn.add_theme_stylebox_override("normal", style)
 		btn.add_theme_stylebox_override("hover", style)
 		btn.add_theme_stylebox_override("pressed", style)
-		
-		# Optional: Add text or keep it plain blocks of color?
-		# "Tebak Warna" -> usually blocks of color.
 		
 		btn.pressed.connect(_on_color_selected.bind(color_data))
 		buttons_container.add_child(btn)
@@ -106,7 +96,6 @@ func handle_correct():
 	feedback_label.modulate = Color.GREEN
 	update_score(score + 1)
 	
-	# Slight delay before next level
 	var tween = create_tween()
 	tween.tween_interval(0.5)
 	tween.tween_callback(next_level)
@@ -114,19 +103,44 @@ func handle_correct():
 func handle_wrong():
 	feedback_label.text = "SALAH!"
 	feedback_label.modulate = Color.RED
-	game_over()
+	lives -= 1
+	update_lives_ui()
+	
+	if lives <= 0:
+		game_over()
+	else:
+		# Maybe a short delay or shuffle? Let's just create new quest
+		var tween = create_tween()
+		tween.tween_interval(0.5)
+		tween.tween_callback(next_level)
 
 func update_score(val):
 	score = val
 	score_label.text = str(score)
 
+func update_lives_ui():
+	var hearts = ""
+	for i in range(lives):
+		hearts += "❤️"
+	lives_label.text = "[center]" + hearts + "[/center]"
+
 func game_over():
 	game_over_panel.show()
-	$GameOverPanel/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
+	$GameOverPanel/Margin/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
 	GameManager.update_high_score(score)
 
 func _on_restart_button_pressed():
+	get_tree().paused = false
 	get_tree().reload_current_scene()
 
 func _on_main_menu_button_pressed():
+	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func _on_pause_button_pressed():
+	pause_overlay.show()
+	get_tree().paused = true
+
+func _on_resume_button_pressed():
+	pause_overlay.hide()
+	get_tree().paused = false

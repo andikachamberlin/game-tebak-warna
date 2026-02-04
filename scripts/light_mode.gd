@@ -1,15 +1,18 @@
 extends Control
 
-@onready var object_rect = $CenterContainer/VBoxContainer/ObjectContainer/ObjectRect
-@onready var light_overlay = $CenterContainer/VBoxContainer/ObjectContainer/LightOverlay
-@onready var prompt_label = $CenterContainer/VBoxContainer/PromptLabel
-@onready var condition_label = $CenterContainer/VBoxContainer/ConditionLabel
-@onready var buttons_container = $CenterContainer/VBoxContainer/ButtonsGrid
-@onready var feedback_label = $CenterContainer/VBoxContainer/FeedbackLabel
-@onready var score_label = $HUD/ScoreLabel
+@onready var object_rect = $SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer/ObjectRect
+@onready var light_overlay = $SafeArea/VBox/DisplayContainer/VBoxContainer/ObjectContainer/LightOverlay
+@onready var prompt_label = $SafeArea/VBox/DisplayContainer/VBoxContainer/PromptLabel
+@onready var condition_label = $SafeArea/VBox/DisplayContainer/VBoxContainer/ConditionLabel
+@onready var buttons_container = $SafeArea/VBox/DisplayContainer/VBoxContainer/ButtonsGrid
+@onready var feedback_label = $SafeArea/VBox/DisplayContainer/VBoxContainer/FeedbackLabel
+@onready var score_label = $SafeArea/VBox/Header/ScorePanel/ScoreLabel
+@onready var lives_label = $SafeArea/VBox/Header/LivesPanel/Container/LivesLabel
 @onready var game_over_panel = $GameOverPanel
+@onready var pause_overlay = $PauseOverlay
 
 var score = 0
+var lives = 3
 var current_round = {}
 
 var colors = [
@@ -24,27 +27,27 @@ var colors = [
 var conditions = [
 	{
 		"name": "Malam Hari",
-		"tint": Color(0.2, 0.2, 0.5, 1.0), # Dark Blue tint simulating night
+		"tint": Color(0.2, 0.2, 0.5, 1.0),
 		"desc": "Benda ini ada di keheningan malam..."
 	},
 	{
 		"name": "Ruang Gelap",
-		"tint": Color(0.15, 0.15, 0.15, 1.0), # Just dark
+		"tint": Color(0.15, 0.15, 0.15, 1.0),
 		"desc": "Lampu padam! Benda apa ini?"
 	},
 	{
 		"name": "Senja",
-		"tint": Color(0.8, 0.5, 0.3, 1.0), # Orange tint
+		"tint": Color(0.8, 0.5, 0.3, 1.0),
 		"desc": "Matahari terbenam menyinari benda ini..."
 	},
 	{
 		"name": "Bawah Pohon Rindang",
-		"tint": Color(0.1, 0.3, 0.1, 1.0), # Dark Greenish shadow
+		"tint": Color(0.1, 0.3, 0.1, 1.0),
 		"desc": "Tertutup bayangan daun pohon..."
 	},
 	{
 		"name": "Lampu Disko Ungu",
-		"tint": Color(0.6, 0.0, 0.8, 1.0), # Extreme Purple light
+		"tint": Color(0.6, 0.0, 0.8, 1.0),
 		"desc": "Kena sorot lampu panggung..."
 	}
 ]
@@ -52,16 +55,16 @@ var conditions = [
 func _ready():
 	randomize()
 	game_over_panel.hide()
+	pause_overlay.hide()
+	lives = 3
+	update_lives_ui()
 	update_score(0)
 	next_level()
 
 func next_level():
 	feedback_label.text = ""
 	
-	# Pick random object color
 	var object_data = colors.pick_random()
-	
-	# Pick random lighting condition
 	var condition = conditions.pick_random()
 	
 	current_round = {
@@ -69,11 +72,7 @@ func next_level():
 		"condition": condition
 	}
 	
-	# display
 	object_rect.color = object_data["color"]
-	# Apply lighting: We use a separate overlay rect with 'multiply' blend mode or just modulate parent.
-	# Simpler: Modulate the ObjectRect directly?
-	# Real world: Object Color * Light Color.
 	object_rect.modulate = condition["tint"]
 	
 	condition_label.text = condition["desc"] + "\n(" + condition["name"] + ")"
@@ -91,11 +90,9 @@ func setup_buttons():
 		var btn = Button.new()
 		btn.custom_minimum_size = Vector2(250, 100)
 		
-		# For buttons, we show the "True" colors so user can pick the concept
 		var style = StyleBoxFlat.new()
 		style.bg_color = color_data["color"]
 		style.set_corner_radius_all(15)
-		# Add border to make White visible
 		style.border_width_bottom = 5
 		style.border_color = Color.BLACK
 		
@@ -103,9 +100,7 @@ func setup_buttons():
 		btn.add_theme_stylebox_override("hover", style)
 		btn.add_theme_stylebox_override("pressed", style)
 		
-		# Add text because colors might be confusing under logic if buttons were also lit (they are not)
 		btn.text = color_data["name"]
-		# Text color contrast
 		if color_data["color"].get_luminance() > 0.5:
 			btn.add_theme_color_override("font_color", Color.BLACK)
 		else:
@@ -124,7 +119,6 @@ func handle_correct():
 	feedback_label.text = "HEBAT! Mata yang tajam!"
 	feedback_label.modulate = Color.GREEN
 	
-	# Reveal true color by resetting modulate temporarily
 	var tween = create_tween()
 	tween.tween_property(object_rect, "modulate", Color.WHITE, 0.5)
 	
@@ -137,22 +131,46 @@ func handle_wrong():
 	feedback_label.text = "Salah... Itu tadi " + current_round["object"]["name"]
 	feedback_label.modulate = Color.RED
 	
-	# Reveal to show why
 	var tween = create_tween()
 	tween.tween_property(object_rect, "modulate", Color.WHITE, 0.5)
 	
-	game_over()
+	lives -= 1
+	update_lives_ui()
+	
+	if lives <= 0:
+		tween.tween_interval(2.0)
+		tween.tween_callback(game_over)
+	else:
+		tween.tween_interval(2.0)
+		tween.tween_callback(next_level)
 
 func update_score(val):
 	score = val
 	score_label.text = str(score)
 
+func update_lives_ui():
+	var hearts = ""
+	for i in range(lives):
+		hearts += "❤️"
+	lives_label.text = "[center]" + hearts + "[/center]"
+
 func game_over():
 	game_over_panel.show()
-	$GameOverPanel/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
+	$GameOverPanel/Margin/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
+	GameManager.update_high_score(score)
 
 func _on_restart_button_pressed():
+	get_tree().paused = false
 	get_tree().reload_current_scene()
 
 func _on_main_menu_button_pressed():
+	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func _on_pause_button_pressed():
+	pause_overlay.show()
+	get_tree().paused = true
+
+func _on_resume_button_pressed():
+	pause_overlay.hide()
+	get_tree().paused = false

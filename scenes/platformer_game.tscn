@@ -13,11 +13,50 @@ fill_from = Vector2(0.5, 0)
 fill_to = Vector2(0.5, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0, 0, 0, 0.8)
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 40
+shadow_offset = Vector2(0, 20)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary"]
+bg_color = Color(0.2, 0.6, 1.0, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
+shadow_color = Color(0.2, 0.6, 1.0, 0.3)
+shadow_size = 10
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary"]
+bg_color = Color(0.95, 0.95, 0.95, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary_hover"]
+bg_color = Color(1, 0.4, 0.4, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="Gradient" id="Gradient_btn"]
+colors = PackedColorArray(1, 1, 1, 0.8, 1, 1, 1, 0.4)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_btn_circle"]
+gradient = SubResource("Gradient_btn")
+width = 96
+height = 96
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+metadata/_snap_enabled = true
 
 [node name="PlatformerGame" type="Node2D"]
 script = ExtResource("1_game")
@@ -44,6 +83,65 @@ position = Vector2(0, -100)
 limit_left = -1000
 limit_right = 1000
 position_smoothing_enabled = true
+
+[node name="MobileControls" type="CanvasLayer" parent="."]
+
+[node name="LeftButton" type="TouchScreenButton" parent="MobileControls"]
+position = Vector2(50, 1750)
+texture_normal = SubResource("GradientTexture2D_btn_circle")
+action = "ui_left"
+
+[node name="Label" type="Label" parent="MobileControls/LeftButton"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 64
+text = "<"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RightButton" type="TouchScreenButton" parent="MobileControls"]
+position = Vector2(200, 1750)
+texture_normal = SubResource("GradientTexture2D_btn_circle")
+action = "ui_right"
+
+[node name="Label" type="Label" parent="MobileControls/RightButton"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 64
+text = ">"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="JumpButton" type="TouchScreenButton" parent="MobileControls"]
+position = Vector2(880, 1700)
+scale = Vector2(1.5, 1.5)
+texture_normal = SubResource("GradientTexture2D_btn_circle")
+action = "ui_accept"
+
+[node name="Label" type="Label" parent="MobileControls/JumpButton"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -6.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 50
+text = "JUMP"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -94,15 +192,22 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -300.0
+offset_left = -250.0
 offset_top = -200.0
-offset_right = 300.0
+offset_right = 250.0
 offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GameOverPanel"]
+[node name="Margin" type="MarginContainer" parent="CanvasLayer/GameOverPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GameOverPanel/Margin"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -116,6 +221,9 @@ alignment = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_font")
 theme_override_font_sizes/font_size = 80
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 80
 text = "JATUH!"
 horizontal_alignment = 1
 
@@ -127,17 +235,25 @@ theme_override_font_sizes/font_size = 64
 text = "Skor: 10"
 horizontal_alignment = 1
 
-[node name="RestartButton" type="Button" parent="CanvasLayer/GameOverPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_font")
 theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary")
 text = "MAIN LAGI"
 
-[node name="MenuButton" type="Button" parent="CanvasLayer/GameOverPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.4, 0.4, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
 text = "MENU UTAMA"
 
-[connection signal="pressed" from="CanvasLayer/GameOverPanel/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/GameOverPanel/VBoxContainer/MenuButton" to="." method="_on_main_menu_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/GameOverPanel/Margin/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/GameOverPanel/Margin/VBoxContainer/MenuButton" to="." method="_on_main_menu_button_pressed"]

@@ -1,13 +1,16 @@
 extends Control
 
-@onready var emotion_label = $CenterContainer/VBoxContainer/EmotionLabel
-@onready var buttons_container = $CenterContainer/VBoxContainer/ButtonsGrid
-@onready var score_label = $HUD/ScoreLabel
-@onready var feedback_label = $CenterContainer/VBoxContainer/FeedbackLabel
-@onready var explanation_label = $CenterContainer/VBoxContainer/ExplanationLabel
+@onready var emotion_label = $SafeArea/VBox/DisplayContainer/VBoxContainer/EmotionLabel
+@onready var buttons_container = $SafeArea/VBox/DisplayContainer/VBoxContainer/ButtonsGrid
+@onready var score_label = $SafeArea/VBox/Header/ScorePanel/ScoreLabel
+@onready var feedback_label = $SafeArea/VBox/DisplayContainer/VBoxContainer/FeedbackLabel
+@onready var explanation_label = $SafeArea/VBox/DisplayContainer/VBoxContainer/ExplanationLabel
+@onready var lives_label = $SafeArea/VBox/Header/LivesPanel/Container/LivesLabel
 @onready var game_over_panel = $GameOverPanel
+@onready var pause_overlay = $PauseOverlay
 
 var score = 0
+var lives = 3
 var current_question = {}
 
 # Available colors in buttons
@@ -22,8 +25,6 @@ var colors = [
 ]
 
 # Questions dataset
-# answers: list of color names considered "correct" or "relatable"
-# explanation: text to show after decision
 var questions = [
 	{
 		"text": "Warna apa yang terasa DINGIN?",
@@ -45,13 +46,13 @@ var questions = [
 	},
 	{
 		"text": "Warna apa yang terasa PANAS?",
-		"answers": ["MERAH", "KUNING", "ORANYE"], # Orange not in default colors list yet, maybe stick to Red/Yellow
+		"answers": ["MERAH", "KUNING", "ORANYE"],
 		"valid_explanation": "Tepat! Seperti matahari atau api.",
 		"wrong_explanation": "Itu justru warna yang sejuk."
 	},
 	{
 		"text": "Warna apa yang terasa BAHAGIA?",
-		"answers": ["KUNING", "HIJAU", "BIRU"], # Relaxed definition
+		"answers": ["KUNING", "HIJAU", "BIRU"],
 		"valid_explanation": "Ceria sekali warnanya!",
 		"wrong_explanation": "Warna itu agak gelap untuk bahagia."
 	},
@@ -66,7 +67,10 @@ var questions = [
 func _ready():
 	randomize()
 	game_over_panel.hide()
+	pause_overlay.hide()
 	explanation_label.text = ""
+	lives = 3
+	update_lives_ui()
 	update_score(0)
 	next_level()
 
@@ -146,24 +150,49 @@ func handle_correct():
 	tween.tween_callback(next_level)
 
 func handle_wrong():
-	# In this mode, maybe we strictly don't game over?
-	# "User: Nggak ada jawaban mutlak -> bikin diskusi & replay"
-	# So let's just give feedback and move on, or give 'strike'?
-	# Let's treat it as educational: Show explanation, no points, next level.
 	feedback_label.text = "MENARIK..."
 	feedback_label.modulate = Color.ORANGE
 	explanation_label.text = current_question["wrong_explanation"]
 	
-	var tween = create_tween()
-	tween.tween_interval(2.0)
-	tween.tween_callback(next_level)
+	lives -= 1
+	update_lives_ui()
+	
+	if lives <= 0:
+		var tween = create_tween()
+		tween.tween_interval(2.0)
+		tween.tween_callback(game_over)
+	else:
+		var tween = create_tween()
+		tween.tween_interval(2.0)
+		tween.tween_callback(next_level)
 
 func update_score(val):
 	score = val
 	score_label.text = str(score)
 
+func update_lives_ui():
+	var hearts = ""
+	for i in range(lives):
+		hearts += "❤️"
+	lives_label.text = "[center]" + hearts + "[/center]"
+
+func game_over():
+	game_over_panel.show()
+	$GameOverPanel/Margin/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
+	GameManager.update_high_score(score)
+
 func _on_restart_button_pressed():
+	get_tree().paused = false
 	get_tree().reload_current_scene()
 
 func _on_main_menu_button_pressed():
+	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func _on_pause_button_pressed():
+	pause_overlay.show()
+	get_tree().paused = true
+
+func _on_resume_button_pressed():
+	pause_overlay.hide()
+	get_tree().paused = false
