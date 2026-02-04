@@ -13,6 +13,9 @@ config_version=5
 config/name="Tebak Warna"
 run/main_scene="res://scenes/splash_screen.tscn"
 config/features=PackedStringArray("4.6", "Mobile")
+boot_splash/bg_color=Color(1, 1, 1, 1)
+boot_splash/show_image=false
+boot_splash/use_filter=false
 config/icon="res://icon.png"
 
 [autoload]
@@ -27,7 +30,6 @@ window/size/viewport_height=1920
 window/size/window_width_override=1080
 window/size/window_height_override=1920
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
 window/handheld/orientation=1
 "`[physics]3d/physics_engine"="Jolt Physics"
 

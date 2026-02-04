@@ -30,11 +30,16 @@ func _ready():
 	
 	setup_buttons()
 	
-	# Try to play music
-	var bgm_path = "res://assets/music/bgm.mp3" # User should provide this
-	if FileAccess.file_exists(bgm_path):
+	# Try to play music (works on all platforms including Android)
+	var bgm_path = "res://assets/music/bgm.mp3"
+	if ResourceLoader.exists(bgm_path):
 		var music = load(bgm_path)
-		AudioManager.play_music(music)
+		if music:
+			AudioManager.play_music(music)
+		else:
+			push_warning("Music file exists but failed to load: " + bgm_path)
+	else:
+		push_warning("Music file not found: " + bgm_path)
 
 func setup_buttons():
 	var buttons = [

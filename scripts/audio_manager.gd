@@ -54,16 +54,25 @@ func _setup_buses():
 		AudioServer.set_bus_send(count, "Master")
 
 func play_music(stream: AudioStream, volume_db: float = 0.0):
+	if not stream:
+		push_warning("AudioManager: Attempted to play null music stream")
+		return
+		
 	if bgm_player.stream == stream and bgm_player.playing:
 		return
 		
 	bgm_player.stream = stream
 	
-	# Try enabling loop relative to stream type
-	if "loop" in stream:
+	# Enable loop for different stream types
+	if stream is AudioStreamMP3:
 		stream.loop = true
-		
+	elif stream is AudioStreamOggVorbis:
+		stream.loop = true
+	elif stream is AudioStreamWAV:
+		stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	
 	bgm_player.volume_db = volume_db
+	bgm_player.autoplay = false # Explicitly set autoplay
 	bgm_player.play()
 
 func stop_music():
