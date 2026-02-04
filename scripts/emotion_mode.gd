@@ -13,6 +13,9 @@ var score = 0
 var lives = 3
 var current_question = {}
 
+# Resources
+var font_resource = preload("res://assets/fonts/AmaticSC-Bold.ttf")
+
 # Available colors in buttons
 # Available colors
 var colors_easy = [
@@ -291,7 +294,81 @@ func update_lives_ui():
 
 func game_over():
 	game_over_panel.show()
-	$GameOverPanel/Margin/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
+	
+	var vbox = $GameOverPanel/Margin/VBoxContainer
+	
+	# Clear existing children to rebuild UI cleanly
+	for child in vbox.get_children():
+		child.queue_free()
+		
+	# 1. Title Label
+	var title = Label.new()
+	title.text = "PERMAINAN SELESAI"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", font_resource)
+	title.add_theme_font_size_override("font_size", 50)
+	title.add_theme_color_override("font_color", Color(0.3, 0.3, 0.3))
+	vbox.add_child(title)
+	
+	# 2. Score Label
+	var score_lbl = Label.new()
+	score_lbl.text = "SKOR: " + str(score)
+	score_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	score_lbl.add_theme_font_override("font", font_resource)
+	score_lbl.add_theme_font_size_override("font_size", 100)
+	score_lbl.add_theme_color_override("font_color", Color(0, 0, 0))
+	vbox.add_child(score_lbl)
+	
+	# Spacer
+	var spacer = Control.new()
+	spacer.custom_minimum_size = Vector2(0, 30)
+	vbox.add_child(spacer)
+	
+	# 3. Restart Button (Green)
+	var restart_btn = Button.new()
+	restart_btn.text = "MAIN LAGI"
+	restart_btn.custom_minimum_size = Vector2(0, 80)
+	
+	var style_start = StyleBoxFlat.new()
+	style_start.bg_color = Color("4CAF50") # Green
+	style_start.set_corner_radius_all(20)
+	style_start.shadow_size = 5
+	style_start.shadow_offset = Vector2(0, 4)
+	style_start.shadow_color = Color(0, 0, 0, 0.2)
+	
+	var style_start_hover = style_start.duplicate()
+	style_start_hover.bg_color = Color("45a049")
+	
+	restart_btn.add_theme_stylebox_override("normal", style_start)
+	restart_btn.add_theme_stylebox_override("hover", style_start_hover)
+	restart_btn.add_theme_stylebox_override("pressed", style_start)
+	restart_btn.add_theme_font_override("font", font_resource)
+	restart_btn.add_theme_font_size_override("font_size", 45)
+	
+	restart_btn.pressed.connect(_on_restart_button_pressed)
+	vbox.add_child(restart_btn)
+	
+	# 4. Menu Button (Orange/Red)
+	var menu_btn = Button.new()
+	menu_btn.text = "MENU UTAMA"
+	menu_btn.custom_minimum_size = Vector2(0, 60)
+	
+	var style_menu = StyleBoxFlat.new()
+	style_menu.bg_color = Color("FF7043") # Soft Red/Orange
+	style_menu.set_corner_radius_all(20)
+	
+	var style_menu_hover = style_menu.duplicate()
+	style_menu_hover.bg_color = Color("F4511E")
+	
+	menu_btn.add_theme_stylebox_override("normal", style_menu)
+	menu_btn.add_theme_stylebox_override("hover", style_menu_hover)
+	menu_btn.add_theme_stylebox_override("pressed", style_menu)
+	menu_btn.add_theme_font_override("font", font_resource)
+	menu_btn.add_theme_font_size_override("font_size", 35)
+	
+	menu_btn.pressed.connect(_on_main_menu_button_pressed)
+	vbox.add_child(menu_btn)
+
 	GameManager.update_high_score(score)
 
 func _on_restart_button_pressed():
