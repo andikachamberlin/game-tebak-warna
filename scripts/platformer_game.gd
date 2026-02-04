@@ -14,6 +14,9 @@ extends Node2D
 @onready var menu_button = $CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox/MenuButton
 @onready var game_over_panel = $CanvasLayer/GameOverPanel
 
+# Resources
+var font_resource = preload("res://assets/fonts/AmaticSC-Bold.ttf")
+
 
 var platform_scene = preload("res://scenes/platform.tscn")
 
@@ -23,7 +26,12 @@ var colors = [
 	{"name": "MERAH", "color": Color.RED},
 	{"name": "HIJAU", "color": Color.GREEN},
 	{"name": "BIRU", "color": Color.BLUE},
-	{"name": "KUNING", "color": Color.YELLOW}
+	{"name": "KUNING", "color": Color.YELLOW},
+	{"name": "MERAH MUDA", "color": Color("FFC0CB")},
+	{"name": "BIRU MUDA", "color": Color("00FFFF")},
+	{"name": "UNGU", "color": Color.PURPLE},
+	{"name": "ORANYE", "color": Color("FF8000")},
+	{"name": "COKLAT", "color": Color.BROWN}
 ]
 
 var target_color_data = {}
@@ -40,6 +48,19 @@ func _ready():
 	player.connect("landed", _on_player_landed)
 	game_over_panel.hide()
 	pause_overlay.hide()
+	
+	# Polish Pause Menu Buttons
+	var style_green = StyleBoxFlat.new()
+	style_green.bg_color = Color("4CAF50")
+	style_green.set_corner_radius_all(20)
+	resume_button.add_theme_stylebox_override("normal", style_green)
+	resume_button.add_theme_font_override("font", font_resource)
+	
+	var style_red = StyleBoxFlat.new()
+	style_red.bg_color = Color("FF7043")
+	style_red.set_corner_radius_all(20)
+	menu_button.add_theme_stylebox_override("normal", style_red)
+	menu_button.add_theme_font_override("font", font_resource)
 
 func _process(_delta):
 	if is_game_over: return
@@ -85,39 +106,44 @@ func _on_player_landed(platform):
 	if platform.color_data.get("name") == "START":
 		return
 		
+	# Always remove touched platforms after landing to keep the game moving
+	platform.queue_free()
+	
 	if platform.color_data["name"] == target_color_data["name"]:
 		score += 1
 		score_label.text = str(score)
-		platform.queue_free() # Disappear
 		AudioManager.play_success()
 		set_new_target()
 		
-		# Bounce effect
-		player.velocity.y = -600
+		# BIG Bounce (Boost)
+		player.velocity.y = -1000
+		
+		# Visual feedback on Target Label
+		var tween = create_tween()
+		tween.tween_property(hud_label, "scale", Vector2(1.2, 1.2), 0.1)
+		tween.tween_property(hud_label, "scale", Vector2(1.0, 1.0), 0.1)
 	else:
-		# Wrong color
-		AudioManager.play_failed()
-		lives -= 1
-		update_lives()
-		if lives <= 0:
-			game_over()
-		else:
-			# Just bounce a bit or punish?
-			platform.queue_free() # Make it disappear so they fall?
-			# Or just warn
-			pass
+		# Wrong color: Regular small bounce to allow climbing
+		# No life loss here anymore, only for falling!
+		player.velocity.y = -600
 
 func handle_death():
+	AudioManager.play_failed()
 	lives -= 1
 	update_lives()
+	
 	if lives <= 0:
 		game_over()
 	else:
-		# Respawn? Or just reset position?
-		# Platformer usually reset position or checkpoint.
-		# For endless jumper, falling is usually fatal.
-		# Let's make falling fatal game over regardless of lives for now, or use lives for "Wrong Colors" only.
-		game_over()
+		# Respawn: Put a new start platform under the player
+		var p = platform_scene.instantiate()
+		p.position = Vector2(player.position.x, player.position.y + 100)
+		p.scale.x = 10
+		p.setup({"name": "START", "color": Color.GRAY})
+		platforms_container.add_child(p)
+		
+		# Small invulnerability or just stop falling
+		player.velocity = Vector2.ZERO
 
 func update_lives():
 	var hearts = ""
@@ -128,7 +154,81 @@ func update_lives():
 func game_over():
 	is_game_over = true
 	game_over_panel.show()
-	$CanvasLayer/GameOverPanel/Margin/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
+	
+	var vbox = $CanvasLayer/GameOverPanel/Margin/VBoxContainer
+	
+	# Clear existing children to rebuild UI cleanly
+	for child in vbox.get_children():
+		child.queue_free()
+		
+	# 1. Title Label
+	var title = Label.new()
+	title.text = "PETUALANGAN SELESAI"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", font_resource)
+	title.add_theme_font_size_override("font_size", 50)
+	title.add_theme_color_override("font_color", Color(0.3, 0.3, 0.3))
+	vbox.add_child(title)
+	
+	# 2. Score Label
+	var score_lbl = Label.new()
+	score_lbl.text = "SKOR: " + str(score)
+	score_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	score_lbl.add_theme_font_override("font", font_resource)
+	score_lbl.add_theme_font_size_override("font_size", 100)
+	score_lbl.add_theme_color_override("font_color", Color(0, 0, 0))
+	vbox.add_child(score_lbl)
+	
+	# Spacer
+	var spacer = Control.new()
+	spacer.custom_minimum_size = Vector2(0, 30)
+	vbox.add_child(spacer)
+	
+	# 3. Restart Button (Green)
+	var restart_btn = Button.new()
+	restart_btn.text = "MAIN LAGI"
+	restart_btn.custom_minimum_size = Vector2(0, 80)
+	
+	var style_start = StyleBoxFlat.new()
+	style_start.bg_color = Color("4CAF50") # Green
+	style_start.set_corner_radius_all(20)
+	style_start.shadow_size = 5
+	style_start.shadow_offset = Vector2(0, 4)
+	style_start.shadow_color = Color(0, 0, 0, 0.2)
+	
+	var style_start_hover = style_start.duplicate()
+	style_start_hover.bg_color = Color("45a049")
+	
+	restart_btn.add_theme_stylebox_override("normal", style_start)
+	restart_btn.add_theme_stylebox_override("hover", style_start_hover)
+	restart_btn.add_theme_stylebox_override("pressed", style_start)
+	restart_btn.add_theme_font_override("font", font_resource)
+	restart_btn.add_theme_font_size_override("font_size", 45)
+	
+	restart_btn.pressed.connect(_on_restart_button_pressed)
+	vbox.add_child(restart_btn)
+	
+	# 4. Menu Button (Orange/Red)
+	var menu_btn = Button.new()
+	menu_btn.text = "MENU UTAMA"
+	menu_btn.custom_minimum_size = Vector2(0, 60)
+	
+	var style_menu = StyleBoxFlat.new()
+	style_menu.bg_color = Color("FF7043") # Soft Red/Orange
+	style_menu.set_corner_radius_all(20)
+	
+	var style_menu_hover = style_menu.duplicate()
+	style_menu_hover.bg_color = Color("F4511E")
+	
+	menu_btn.add_theme_stylebox_override("normal", style_menu)
+	menu_btn.add_theme_stylebox_override("hover", style_menu_hover)
+	menu_btn.add_theme_stylebox_override("pressed", style_menu)
+	menu_btn.add_theme_font_override("font", font_resource)
+	menu_btn.add_theme_font_size_override("font_size", 35)
+	
+	menu_btn.pressed.connect(_on_main_menu_button_pressed)
+	vbox.add_child(menu_btn)
+
 	GameManager.update_high_score(score)
 
 func _on_restart_button_pressed():

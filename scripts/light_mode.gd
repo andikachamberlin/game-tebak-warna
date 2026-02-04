@@ -131,30 +131,33 @@ func setup_buttons(pool):
 		btn.scale = Vector2.ZERO
 		
 		var style = StyleBoxFlat.new()
-		style.bg_color = color_data["color"]
-		style.set_corner_radius_all(15)
-		style.border_width_bottom = 5
-		style.border_color = Color.BLACK
+		style.bg_color = Color.WHITE
+		style.set_corner_radius_all(20)
+		style.border_width_bottom = 8
+		style.border_color = Color("E0E0E0") # Light gray bottom border for 3D look
+		
+		var style_hover = style.duplicate()
+		style_hover.bg_color = Color("E3F2FD") # Distinct light blue hover
+		style_hover.border_color = Color("2196F3") # Blue bottom border
+		style_hover.border_width_left = 2
+		style_hover.border_width_top = 2
+		style_hover.border_width_right = 2
 		
 		btn.add_theme_stylebox_override("normal", style)
-		btn.add_theme_stylebox_override("hover", style)
-		btn.add_theme_stylebox_override("pressed", style)
+		btn.add_theme_stylebox_override("hover", style_hover)
+		btn.add_theme_stylebox_override("pressed", style_hover)
 		
 		btn.text = color_data["name"]
 		
-		# Load Font and Add BOLD Outline
-		var font_file = load("res://assets/fonts/AmaticSC-Bold.ttf")
-		btn.add_theme_font_override("font", font_file)
-		btn.add_theme_font_size_override("font_size", 40)
-		btn.add_theme_constant_override("outline_size", 2) # Adding Outline for Bold effect
+		# Load Font
+		btn.add_theme_font_override("font", font_resource) # Using the preloaded resource
+		btn.add_theme_font_size_override("font_size", 45)
+		btn.add_theme_color_override("font_color", Color.BLACK)
+		btn.add_theme_color_override("font_hover_color", Color("1976D2")) # Blue text on hover
+		btn.add_theme_color_override("font_pressed_color", Color("1565C0"))
+		btn.add_theme_color_override("font_outline_color", Color.WHITE) # Subtle highlight
+		btn.add_theme_constant_override("outline_size", 0)
 		
-		if color_data["color"].get_luminance() > 0.5:
-			btn.add_theme_color_override("font_color", Color.BLACK)
-			btn.add_theme_color_override("font_outline_color", Color.BLACK) # Bold same color
-		else:
-			btn.add_theme_color_override("font_color", Color.WHITE)
-			btn.add_theme_color_override("font_outline_color", Color.BLACK) # White text, Black outline for contrast
-			
 		# Connect SFX
 		# btn.mouse_entered.connect(AudioManager.play_button_hover) # Disabled per user request
 
