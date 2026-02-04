@@ -13,6 +13,18 @@ extends Control
 @onready var high_score_label = $HighScoreLabel
 
 func _ready():
+	# Localize Texts (Hardcoded Indonesian)
+	start_button.text = "KLASIK"
+	stroop_button.text = "TES OTAK"
+	object_button.text = "TEBAK BENDA"
+	story_button.text = "MODE CERITA"
+	platformer_button.text = "PETUALANGAN"
+	emotion_button.text = "WARNA EMOSI"
+	light_button.text = "TEBAK CAHAYA"
+	
+	settings_button.text = "PENGATURAN"
+	quit_button.text = "KELUAR"
+	
 	# Update High Score Display
 	high_score_label.text = "Rekor Tertinggi: " + str(GameManager.high_score)
 	
@@ -26,8 +38,8 @@ func _ready():
 
 func setup_buttons():
 	var buttons = [
-		start_button, stroop_button, object_button, story_button, 
-		platformer_button, emotion_button, light_button, 
+		start_button, stroop_button, object_button, story_button,
+		platformer_button, emotion_button, light_button,
 		settings_button, quit_button
 	]
 	

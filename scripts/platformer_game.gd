@@ -4,7 +4,16 @@ extends Node2D
 @onready var platforms_container = $Platforms
 @onready var hud_label = $CanvasLayer/HUD/TargetLabel
 @onready var score_label = $CanvasLayer/HUD/ScoreLabel
+@onready var lives_label = $CanvasLayer/HUD/LivesLabel
+@onready var pause_overlay = $CanvasLayer/PauseOverlay
+@onready var pause_button = $CanvasLayer/HUD/PauseButton
+# Labels for translation
+@onready var target_label = $CanvasLayer/HUD/TargetLabel
+@onready var pause_label = $CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox/Label
+@onready var resume_button = $CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox/ResumeButton
+@onready var menu_button = $CanvasLayer/PauseOverlay/CenterContainer/Card/Margin/VBox/MenuButton
 @onready var game_over_panel = $CanvasLayer/GameOverPanel
+
 
 var platform_scene = preload("res://scenes/platform.tscn")
 
@@ -19,14 +28,18 @@ var colors = [
 
 var target_color_data = {}
 var score = 0
+var lives = 3
 var is_game_over = false
 
 func _ready():
 	randomize()
 	spawn_initial_platforms()
 	set_new_target()
+	update_lives()
+	
 	player.connect("landed", _on_player_landed)
 	game_over_panel.hide()
+	pause_overlay.hide()
 
 func _process(_delta):
 	if is_game_over: return
@@ -35,15 +48,8 @@ func _process(_delta):
 	if player.position.y < last_platform_y + 1000:
 		spawn_platform(last_platform_y - platform_spacing)
 	
-	# Check falling (Death)
-	if player.position.y > last_platform_y + 2000: # Simple check if fallen too far below "last" (which is actually highest/lowest Y)
-		# Wait, last_platform_y goes negative (up).
-		# We need to track the lowest platform or camera view.
-		# Simplest: if player.y > (camera_center + 1000) -> Die.
-		pass
-	
 	if player.position.y > 600: # Falling below start
-		game_over()
+		handle_death()
 
 func spawn_initial_platforms():
 	# Ground platform
@@ -70,11 +76,7 @@ func spawn_platform(y_pos):
 
 func set_new_target():
 	target_color_data = colors.pick_random()
-	hud_label.text = "LOMPAT KE: " + target_color_data["name"]
-	hud_label.modulate = target_color_data["color"] # Or keep white text?
-	# Make text color different for extra challenge (Stroop)
-	# But user said "Tebak Warna + Gerakan".
-	# Let's keep text color matching for now to be "fairer" platformer, or random.
+	hud_label.text = "LOMPAT KE: " + target_color_data["name"] # Should translate "LOMPAT KE" too if needed
 	hud_label.modulate = Color.WHITE
 
 func _on_player_landed(platform):
@@ -86,26 +88,61 @@ func _on_player_landed(platform):
 	if platform.color_data["name"] == target_color_data["name"]:
 		score += 1
 		score_label.text = str(score)
-		platform.queue_free() # Make it disappear? Or just jump off?
-		# User: "Lompat ke platform warna yang sesuai"
-		# If we keep it, player can rest.
-		# Let's just update target
+		platform.queue_free() # Disappear
+		AudioManager.play_success()
 		set_new_target()
 		
-		# Optional: Bounce effect
+		# Bounce effect
 		player.velocity.y = -600
 	else:
 		# Wrong color
+		AudioManager.play_failed()
+		lives -= 1
+		update_lives()
+		if lives <= 0:
+			game_over()
+		else:
+			# Just bounce a bit or punish?
+			platform.queue_free() # Make it disappear so they fall?
+			# Or just warn
+			pass
+
+func handle_death():
+	lives -= 1
+	update_lives()
+	if lives <= 0:
 		game_over()
+	else:
+		# Respawn? Or just reset position?
+		# Platformer usually reset position or checkpoint.
+		# For endless jumper, falling is usually fatal.
+		# Let's make falling fatal game over regardless of lives for now, or use lives for "Wrong Colors" only.
+		game_over()
+
+func update_lives():
+	var hearts = ""
+	for i in range(lives):
+		hearts += "❤️"
+	lives_label.text = hearts
 
 func game_over():
 	is_game_over = true
 	game_over_panel.show()
- 	$CanvasLayer/GameOverPanel/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
+	$CanvasLayer/GameOverPanel/Margin/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
 	GameManager.update_high_score(score)
 
 func _on_restart_button_pressed():
+	get_tree().paused = false
 	get_tree().reload_current_scene()
 
 func _on_main_menu_button_pressed():
+	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func _on_pause_button_pressed():
+	pause_overlay.show()
+	get_tree().paused = true
+
+func _on_resume_button_pressed():
+	pause_overlay.hide()
+	get_tree().paused = false

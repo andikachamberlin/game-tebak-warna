@@ -382,7 +382,7 @@ func _on_answer_selected(btn_node, option):
 func handle_timeout():
 	is_game_active = false
 	Input.vibrate_handheld(500)
-	feedback_label.text = "[center][shake rate=20 level=10]" + GameManager.tr_key("TXT_MSG_TIMEOUT") + "[/shake][/center]"
+	feedback_label.text = "[center][shake rate=20 level=10]WAKTU HABIS![/shake][/center]"
 	
 	lives -= 1
 	update_lives()
@@ -411,7 +411,7 @@ func handle_correct(btn_node):
 	btn_node.add_theme_color_override("font_outline_color", Color.WHITE)
 	btn_node.add_theme_constant_override("outline_size", 2)
 	
-	feedback_label.text = "[center][wave][font=res://assets/fonts/AmaticSC-Bold.ttf]" + GameManager.tr_key("TXT_MSG_CORRECT") + option_name_to_bbcode(current_question["name"]) + "![/font][/wave][/center]"
+	feedback_label.text = "[center][wave][font=res://assets/fonts/AmaticSC-Bold.ttf]BENAR WARNA " + option_name_to_bbcode(current_question["name"]) + "![/font][/wave][/center]"
 	
 	# Bonus score for speed
 	var bonus = int(current_time)
@@ -499,11 +499,11 @@ func handle_wrong(btn_node):
 	update_lives()
 	
 	if lives <= 0:
-		feedback_label.text = "[center][shake rate=20 level=10][font=res://assets/fonts/AmaticSC-Bold.ttf]" + GameManager.tr_key("TXT_GAME_OVER") + "![/font][/shake][/center]"
+		feedback_label.text = "[center][shake rate=20 level=10][font=res://assets/fonts/AmaticSC-Bold.ttf]YAH GAME OVER![/font][/shake][/center]"
 		await get_tree().create_timer(1.0).timeout
 		game_over()
 	else:
-		feedback_label.text = "[center][shake rate=20 level=10][font=res://assets/fonts/AmaticSC-Bold.ttf]" + GameManager.tr_key("TXT_MSG_WRONG") + "[/font][/shake][/center]"
+		feedback_label.text = "[center][shake rate=20 level=10][font=res://assets/fonts/AmaticSC-Bold.ttf]YAH SALAH TEBAK...[/font][/shake][/center]"
 		var tween = create_tween()
 		tween.tween_property(btn_node, "position:x", btn_node.position.x + 15, 0.05)
 		tween.tween_property(btn_node, "position:x", btn_node.position.x - 15, 0.05)
