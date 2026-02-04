@@ -1,46 +1,7 @@
-[gd_scene format=3 uid="uid://storymode"]
+[gd_scene format=3 uid="uid://kfuaiejxtqby"]
 
-[ext_resource type="Script" path="res://scripts/story_mode.gd" id="1_story"]
-[ext_resource type="Texture2D" uid="uid://cfmpacohs3gw6" path="res://assets/main_menu.png" id="2_bg"]
+[ext_resource type="Script" uid="uid://bmu8v1bmwi1db" path="res://scripts/story_mode.gd" id="1_story"]
 [ext_resource type="FontFile" uid="uid://c2e7duja1spvc" path="res://assets/fonts/AmaticSC-Bold.ttf" id="3_font"]
-
-[sub_resource type="FontVariation" id="FontVariation_bold"]
-base_font = ExtResource("3_font")
-variation_embolden = 0.8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 30
-corner_radius_top_right = 30
-corner_radius_bottom_right = 30
-corner_radius_bottom_left = 30
-shadow_color = Color(0, 0, 0, 0.1)
-shadow_size = 40
-shadow_offset = Vector2(0, 20)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary"]
-bg_color = Color(0.2, 0.6, 1.0, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-shadow_color = Color(0.2, 0.6, 1.0, 0.3)
-shadow_size = 10
-shadow_offset = Vector2(0, 5)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary"]
-bg_color = Color(0.95, 0.95, 0.95, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary_hover"]
-bg_color = Color(1, 0.4, 0.4, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lives"]
 bg_color = Color(1, 1, 1, 1)
@@ -72,6 +33,13 @@ shadow_color = Color(0, 0, 0, 0.05)
 shadow_size = 5
 shadow_offset = Vector2(0, 4)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause_pressed"]
+bg_color = Color(0.9, 0.9, 0.9, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause_hover"]
 bg_color = Color(0.96, 0.96, 0.96, 1)
 corner_radius_top_left = 20
@@ -82,14 +50,45 @@ shadow_color = Color(0, 0, 0, 0.08)
 shadow_size = 8
 shadow_offset = Vector2(0, 6)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause_pressed"]
-bg_color = Color(0.9, 0.9, 0.9, 1)
+[sub_resource type="FontVariation" id="FontVariation_bold"]
+base_font = ExtResource("3_font")
+variation_embolden = 0.8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 40
+shadow_offset = Vector2(0, 20)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary"]
+bg_color = Color(0.2, 0.6, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_color = Color(0.2, 0.6, 1, 0.3)
+shadow_size = 10
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary"]
+bg_color = Color(0.95, 0.95, 0.95, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
-[node name="StoryMode" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary_hover"]
+bg_color = Color(1, 0.4, 0.4, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="StoryMode" type="Control" unique_id=1937052595]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -98,7 +97,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_story")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=40155123]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -107,7 +106,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.95, 0.96, 0.97, 1)
 
-[node name="SafeArea" type="MarginContainer" parent="."]
+[node name="SafeArea" type="MarginContainer" parent="." unique_id=1585753171]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -119,25 +118,24 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 50
 
-[node name="VBox" type="VBoxContainer" parent="SafeArea"]
+[node name="VBox" type="VBoxContainer" parent="SafeArea" unique_id=1397326269]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Header" type="HBoxContainer" parent="SafeArea/VBox"]
+[node name="Header" type="HBoxContainer" parent="SafeArea/VBox" unique_id=344145477]
 layout_mode = 2
-alignment = 0
 
-[node name="LivesPanel" type="PanelContainer" parent="SafeArea/VBox/Header"]
+[node name="LivesPanel" type="PanelContainer" parent="SafeArea/VBox/Header" unique_id=408946767]
 custom_minimum_size = Vector2(160, 60)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lives")
 
-[node name="Container" type="MarginContainer" parent="SafeArea/VBox/Header/LivesPanel"]
+[node name="Container" type="MarginContainer" parent="SafeArea/VBox/Header/LivesPanel" unique_id=352930922]
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_right = 15
 
-[node name="LivesLabel" type="RichTextLabel" parent="SafeArea/VBox/Header/LivesPanel/Container"]
+[node name="LivesLabel" type="RichTextLabel" parent="SafeArea/VBox/Header/LivesPanel/Container" unique_id=268318157]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 32
@@ -147,16 +145,16 @@ fit_content = true
 scroll_active = false
 vertical_alignment = 1
 
-[node name="Spacer" type="Control" parent="SafeArea/VBox/Header"]
+[node name="Spacer" type="Control" parent="SafeArea/VBox/Header" unique_id=1449664518]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ScorePanel" type="PanelContainer" parent="SafeArea/VBox/Header"]
+[node name="ScorePanel" type="PanelContainer" parent="SafeArea/VBox/Header" unique_id=1827373625]
 custom_minimum_size = Vector2(150, 60)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_score")
 
-[node name="ScoreLabel" type="Label" parent="SafeArea/VBox/Header/ScorePanel"]
+[node name="ScoreLabel" type="Label" parent="SafeArea/VBox/Header/ScorePanel" unique_id=652362916]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
 theme_override_fonts/font = ExtResource("3_font")
@@ -165,11 +163,11 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Spacer2" type="Control" parent="SafeArea/VBox/Header"]
+[node name="Spacer2" type="Control" parent="SafeArea/VBox/Header" unique_id=343083245]
 custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 
-[node name="PauseButton" type="Button" parent="SafeArea/VBox/Header"]
+[node name="PauseButton" type="Button" parent="SafeArea/VBox/Header" unique_id=1409961671]
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 0.3, 0.3, 1)
@@ -180,17 +178,17 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_pause_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_pause_hover")
 text = "II"
 
-[node name="DisplayContainer" type="CenterContainer" parent="SafeArea/VBox"]
+[node name="DisplayContainer" type="CenterContainer" parent="SafeArea/VBox" unique_id=1802593917]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SafeArea/VBox/DisplayContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SafeArea/VBox/DisplayContainer" unique_id=608042388]
 custom_minimum_size = Vector2(800, 0)
 layout_mode = 2
 theme_override_constants/separation = 50
 alignment = 1
 
-[node name="StoryLabel" type="Label" parent="SafeArea/VBox/DisplayContainer/VBoxContainer"]
+[node name="StoryLabel" type="Label" parent="SafeArea/VBox/DisplayContainer/VBoxContainer" unique_id=2426653]
 custom_minimum_size = Vector2(800, 300)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
@@ -202,22 +200,20 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="ButtonsGrid" type="GridContainer" parent="SafeArea/VBox/DisplayContainer/VBoxContainer"]
+[node name="ButtonsGrid" type="GridContainer" parent="SafeArea/VBox/DisplayContainer/VBoxContainer" unique_id=1833284301]
 layout_mode = 2
 theme_override_constants/h_separation = 30
 theme_override_constants/v_separation = 30
 columns = 2
 
-[node name="FeedbackLabel" type="Label" parent="SafeArea/VBox/DisplayContainer/VBoxContainer"]
+[node name="FeedbackLabel" type="Label" parent="SafeArea/VBox/DisplayContainer/VBoxContainer" unique_id=1351433048]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_bold")
 theme_override_font_sizes/font_size = 80
 horizontal_alignment = 1
 
-[connection signal="pressed" from="SafeArea/VBox/Header/PauseButton" to="." method="_on_pause_button_pressed"]
-
-[node name="GameOverPanel" type="Panel" parent="."]
+[node name="GameOverPanel" type="Panel" parent="." unique_id=1615891190]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -233,66 +229,19 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Margin" type="MarginContainer" parent="GameOverPanel"]
-layout_mode = 2
+[node name="Margin" type="MarginContainer" parent="GameOverPanel" unique_id=390419107]
+layout_mode = 0
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GameOverPanel/Margin"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOverPanel/Margin" unique_id=2016959724]
+layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="Label" type="Label" parent="GameOverPanel/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
-theme_override_fonts/font = SubResource("FontVariation_bold")
-theme_override_font_sizes/font_size = 80
-text = "SELESAI"
-horizontal_alignment = 1
-
-[node name="FinalScoreLabel" type="Label" parent="GameOverPanel/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.8, 0, 1)
-theme_override_fonts/font = SubResource("FontVariation_bold")
-theme_override_font_sizes/font_size = 64
-text = "Skor: 0"
-horizontal_alignment = 1
-
-[node name="RestartButton" type="Button" parent="GameOverPanel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("FontVariation_bold")
-theme_override_font_sizes/font_size = 50
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary")
-text = "MAIN LAGI"
-
-[node name="MenuButton" type="Button" parent="GameOverPanel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.4, 0.4, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("FontVariation_bold")
-theme_override_font_sizes/font_size = 42
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
-text = "MENU UTAMA"
-
-[connection signal="pressed" from="GameOverPanel/Margin/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
-[connection signal="pressed" from="GameOverPanel/Margin/VBoxContainer/MenuButton" to="." method="_on_main_menu_button_pressed"]
-
-[node name="PauseOverlay" type="ColorRect" parent="."]
+[node name="PauseOverlay" type="ColorRect" parent="." unique_id=437331599]
 process_mode = 3
 visible = false
 layout_mode = 1
@@ -303,7 +252,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.4)
 
-[node name="CenterContainer" type="CenterContainer" parent="PauseOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="PauseOverlay" unique_id=400413866]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -311,23 +260,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Card" type="PanelContainer" parent="PauseOverlay/CenterContainer"]
+[node name="Card" type="PanelContainer" parent="PauseOverlay/CenterContainer" unique_id=575016538]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Margin" type="MarginContainer" parent="PauseOverlay/CenterContainer/Card"]
+[node name="Margin" type="MarginContainer" parent="PauseOverlay/CenterContainer/Card" unique_id=1997013452]
 layout_mode = 2
 theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 40
 
-[node name="VBox" type="VBoxContainer" parent="PauseOverlay/CenterContainer/Card/Margin"]
+[node name="VBox" type="VBoxContainer" parent="PauseOverlay/CenterContainer/Card/Margin" unique_id=1064307399]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="Label" type="Label" parent="PauseOverlay/CenterContainer/Card/Margin/VBox"]
+[node name="Label" type="Label" parent="PauseOverlay/CenterContainer/Card/Margin/VBox" unique_id=751634792]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
 theme_override_fonts/font = SubResource("FontVariation_bold")
@@ -335,7 +284,7 @@ theme_override_font_sizes/font_size = 72
 text = "JEDA"
 horizontal_alignment = 1
 
-[node name="ResumeButton" type="Button" parent="PauseOverlay/CenterContainer/Card/Margin/VBox"]
+[node name="ResumeButton" type="Button" parent="PauseOverlay/CenterContainer/Card/Margin/VBox" unique_id=810290849]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -346,7 +295,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary")
 text = "LANJUT"
 
-[node name="MenuButton" type="Button" parent="PauseOverlay/CenterContainer/Card/Margin/VBox"]
+[node name="MenuButton" type="Button" parent="PauseOverlay/CenterContainer/Card/Margin/VBox" unique_id=948892081]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.4, 0.4, 1)
@@ -358,5 +307,6 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
 text = "MENU UTAMA"
 
+[connection signal="pressed" from="SafeArea/VBox/Header/PauseButton" to="." method="_on_pause_button_pressed"]
 [connection signal="pressed" from="PauseOverlay/CenterContainer/Card/Margin/VBox/ResumeButton" to="." method="_on_resume_button_pressed"]
 [connection signal="pressed" from="PauseOverlay/CenterContainer/Card/Margin/VBox/MenuButton" to="." method="_on_main_menu_button_pressed"]
