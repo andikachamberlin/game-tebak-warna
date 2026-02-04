@@ -131,6 +131,10 @@ func setup_buttons():
 		btn.add_theme_stylebox_override("hover", style)
 		btn.add_theme_stylebox_override("pressed", style)
 		
+		# Connect SFX
+		btn.mouse_entered.connect(AudioManager.play_button_hover)
+		btn.pressed.connect(AudioManager.play_button_click)
+		
 		btn.pressed.connect(_on_color_selected.bind(color_data))
 		buttons_container.add_child(btn)
 		

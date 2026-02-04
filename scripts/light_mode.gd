@@ -116,6 +116,10 @@ func setup_buttons():
 		else:
 			btn.add_theme_color_override("font_color", Color.WHITE)
 			
+		# Connect SFX
+		btn.mouse_entered.connect(AudioManager.play_button_hover)
+		btn.pressed.connect(AudioManager.play_button_click)
+		
 		btn.pressed.connect(_on_answer_selected.bind(color_data))
 		buttons_container.add_child(btn)
 		

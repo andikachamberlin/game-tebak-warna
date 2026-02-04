@@ -3,6 +3,15 @@ extends Node
 var bgm_player: AudioStreamPlayer
 var sfx_players: Array[AudioStreamPlayer] = []
 
+var button_sfx = preload("res://assets/sfx/button.mp3")
+
+func play_button_click():
+	play_sfx(button_sfx, 0.0, 1.0)
+
+func play_button_hover():
+	# Rekomendasi: Pitch sedikit lebih tinggi dan volume lebih kecil untuk hover
+	play_sfx(button_sfx, -5.0, 1.2)
+
 func _ready():
 	# Setup BGM Player
 	bgm_player = AudioStreamPlayer.new()

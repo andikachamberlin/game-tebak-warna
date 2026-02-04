@@ -41,6 +41,12 @@ func setup_buttons():
 	for btn in buttons:
 		tween.tween_property(btn, "scale", Vector2(1, 1), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(delay)
 		delay += 0.05
+		
+		# Connect SFX
+		if not btn.mouse_entered.is_connected(AudioManager.play_button_hover):
+			btn.mouse_entered.connect(AudioManager.play_button_hover)
+		if not btn.pressed.is_connected(AudioManager.play_button_click):
+			btn.pressed.connect(AudioManager.play_button_click)
 
 func _on_start_button_pressed():
 	GameManager.current_mode = "classic"

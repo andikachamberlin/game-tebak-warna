@@ -191,7 +191,9 @@ alignment = 1
 [node name="EmotionLabel" type="Label" parent="SafeArea/VBox/DisplayContainer/VBoxContainer" unique_id=1537580195]
 custom_minimum_size = Vector2(800, 200)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 20
 theme_override_fonts/font = SubResource("FontVariation_bold")
 theme_override_font_sizes/font_size = 80
 text = "Warna apa yang terasa MARAH?"
