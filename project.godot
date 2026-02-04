@@ -28,8 +28,15 @@ window/size/window_width_override=1080
 window/size/window_height_override=1920
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-window/handheld/orientation="portrait"
+window/handheld/orientation=1
 "`[physics]3d/physics_engine"="Jolt Physics"
+
+[importer_defaults]
+
+animation_library={
+&"animation/fps": 60.0,
+&"nodes/use_node_type_suffixes": false
+}
 
 [physics]
 

@@ -273,6 +273,7 @@ text = "MENU UTAMA"
 [connection signal="pressed" from="GameOverPanel/Margin/VBoxContainer/MenuButton" to="." method="_on_main_menu_button_pressed"]
 
 [node name="PauseOverlay" type="ColorRect" parent="."]
+process_mode = 3
 visible = false
 layout_mode = 1
 anchors_preset = 15
