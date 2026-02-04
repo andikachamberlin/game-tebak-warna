@@ -9,9 +9,22 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += GRAVITY * delta
 
-	# Handle Jump
+	# Handle Jump with bouncy animation
 	if Input.is_action_just_pressed("ui_accept"):
 		velocity.y = JUMP_VELOCITY
+		
+		# Squash & Stretch animation for bouncy feel
+		var tween = create_tween()
+		tween.set_parallel(true)
+		
+		# Squash down before jump (wide and short)
+		tween.tween_property(self, "scale", Vector2(1.3, 0.7), 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		
+		# Then stretch up (tall and narrow)
+		tween.chain().tween_property(self, "scale", Vector2(0.8, 1.2), 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		
+		# Return to normal
+		tween.chain().tween_property(self, "scale", Vector2(1.0, 1.0), 0.2).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 	# Get the input direction and handle the movement/deceleration.
 	var direction = Input.get_axis("ui_left", "ui_right")

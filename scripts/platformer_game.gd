@@ -49,18 +49,58 @@ func _ready():
 	game_over_panel.hide()
 	pause_overlay.hide()
 	
-	# Polish Pause Menu Buttons
+	# Polish Pause Menu Buttons with Hover Effects
+	# Resume Button (Green)
 	var style_green = StyleBoxFlat.new()
 	style_green.bg_color = Color("4CAF50")
 	style_green.set_corner_radius_all(20)
-	resume_button.add_theme_stylebox_override("normal", style_green)
-	resume_button.add_theme_font_override("font", font_resource)
+	style_green.shadow_size = 5
+	style_green.shadow_offset = Vector2(0, 4)
+	style_green.shadow_color = Color(0, 0, 0, 0.2)
 	
+	var style_green_hover = style_green.duplicate()
+	style_green_hover.bg_color = Color("45a049")
+	style_green_hover.shadow_size = 8
+	style_green_hover.shadow_offset = Vector2(0, 6)
+	
+	var style_green_pressed = style_green.duplicate()
+	style_green_pressed.bg_color = Color("3d8b40")
+	style_green_pressed.shadow_size = 2
+	style_green_pressed.shadow_offset = Vector2(0, 2)
+	
+	resume_button.add_theme_stylebox_override("normal", style_green)
+	resume_button.add_theme_stylebox_override("hover", style_green_hover)
+	resume_button.add_theme_stylebox_override("pressed", style_green_pressed)
+	resume_button.add_theme_font_override("font", font_resource)
+	resume_button.add_theme_color_override("font_color", Color.WHITE)
+	resume_button.add_theme_color_override("font_hover_color", Color(0.95, 1, 0.95))
+	resume_button.add_theme_color_override("font_pressed_color", Color(0.9, 0.9, 0.9))
+	
+	# Menu Button (Red/Orange)
 	var style_red = StyleBoxFlat.new()
 	style_red.bg_color = Color("FF7043")
 	style_red.set_corner_radius_all(20)
+	style_red.shadow_size = 5
+	style_red.shadow_offset = Vector2(0, 4)
+	style_red.shadow_color = Color(0, 0, 0, 0.2)
+	
+	var style_red_hover = style_red.duplicate()
+	style_red_hover.bg_color = Color("F4511E")
+	style_red_hover.shadow_size = 8
+	style_red_hover.shadow_offset = Vector2(0, 6)
+	
+	var style_red_pressed = style_red.duplicate()
+	style_red_pressed.bg_color = Color("E64A19")
+	style_red_pressed.shadow_size = 2
+	style_red_pressed.shadow_offset = Vector2(0, 2)
+	
 	menu_button.add_theme_stylebox_override("normal", style_red)
+	menu_button.add_theme_stylebox_override("hover", style_red_hover)
+	menu_button.add_theme_stylebox_override("pressed", style_red_pressed)
 	menu_button.add_theme_font_override("font", font_resource)
+	menu_button.add_theme_color_override("font_color", Color.WHITE)
+	menu_button.add_theme_color_override("font_hover_color", Color(1, 0.95, 0.95))
+	menu_button.add_theme_color_override("font_pressed_color", Color(0.9, 0.9, 0.9))
 
 func _process(_delta):
 	if is_game_over: return
