@@ -15,41 +15,52 @@ var score = 0
 var lives = 3
 var current_round = {}
 
-var colors = [
+# Colors
+var colors_easy = [
 	{"name": "MERAH", "color": Color.RED},
 	{"name": "HIJAU", "color": Color.GREEN},
 	{"name": "BIRU", "color": Color.BLUE},
 	{"name": "KUNING", "color": Color.YELLOW},
 	{"name": "PUTIH", "color": Color.WHITE},
-	{"name": "ABU-ABU", "color": Color.GRAY}
+	{"name": "ABU-ABU", "color": Color.GRAY},
+	{"name": "ORANYE", "color": Color("FF8000")},
+	{"name": "COKLAT", "color": Color.BROWN}
+]
+
+var colors_hard = [
+	{"name": "MERAH MUDA", "color": Color("FFC0CB")}, # Pink
+	{"name": "BIRU MUDA", "color": Color("00FFFF")}, # Cyan
+	{"name": "UNGU", "color": Color.PURPLE},
+	{"name": "HITAM", "color": Color.BLACK}, # Can be tricky in dark lighting!
+	{"name": "EMAS", "color": Color("FFD700")},
+	{"name": "HIJAU LAUT", "color": Color("20B2AA")}, # Teal
+	{"name": "MERAH BATA", "color": Color("B22222")},
+	{"name": "KREM", "color": Color("F5F5DC")}
 ]
 
 var conditions = [
-	{
-		"name": "Malam Hari",
-		"tint": Color(0.2, 0.2, 0.5, 1.0),
-		"desc": "Benda ini ada di keheningan malam..."
-	},
-	{
-		"name": "Ruang Gelap",
-		"tint": Color(0.15, 0.15, 0.15, 1.0),
-		"desc": "Lampu padam! Benda apa ini?"
-	},
-	{
-		"name": "Senja",
-		"tint": Color(0.8, 0.5, 0.3, 1.0),
-		"desc": "Matahari terbenam menyinari benda ini..."
-	},
-	{
-		"name": "Bawah Pohon Rindang",
-		"tint": Color(0.1, 0.3, 0.1, 1.0),
-		"desc": "Tertutup bayangan daun pohon..."
-	},
-	{
-		"name": "Lampu Disko Ungu",
-		"tint": Color(0.6, 0.0, 0.8, 1.0),
-		"desc": "Kena sorot lampu panggung..."
-	}
+	# Original / Natural Light
+	{"name": "Malam Hari", "tint": Color(0.2, 0.2, 0.5, 1.0), "desc": "Benda ini ada di keheningan malam..."},
+	{"name": "Ruang Gelap", "tint": Color(0.15, 0.15, 0.15, 1.0), "desc": "Lampu padam! Benda apa ini?"},
+	{"name": "Senja", "tint": Color(0.8, 0.5, 0.3, 1.0), "desc": "Matahari terbenam menyinari benda ini..."},
+	{"name": "Bawah Pohon", "tint": Color(0.1, 0.3, 0.1, 1.0), "desc": "Tertutup bayangan daun pohon..."},
+	
+	# Artificial Light
+	{"name": "Lampu Disko Ungu", "tint": Color(0.6, 0.0, 0.8, 1.0), "desc": "Kena sorot lampu panggung..."},
+	{"name": "Lampu Neon Merah", "tint": Color(0.8, 0.0, 0.0, 1.0), "desc": "Di bawah sinar neon merah..."},
+	{"name": "Cahaya Lilin", "tint": Color(0.7, 0.5, 0.1, 1.0), "desc": "Hanya diterangi lilin kecil..."},
+	{"name": "Lampu Jalan Kuning", "tint": Color(0.8, 0.7, 0.1, 1.0), "desc": "Di pinggir jalan malam hari..."},
+	
+	# Environmental
+	{"name": "Dalam Air", "tint": Color(0.0, 0.4, 0.8, 1.0), "desc": "Tenggelam di dasar kolam..."},
+	{"name": "Kabut Tebal", "tint": Color(0.7, 0.7, 0.7, 0.8), "desc": "Tertutup kabut putih..."},
+	{"name": "Badai Pasir", "tint": Color(0.7, 0.5, 0.2, 1.0), "desc": "Terjebak badai gurun..."},
+	{"name": "Hutan Magis", "tint": Color(0.2, 0.0, 0.4, 1.0), "desc": "Di hutan sihir yang gelap..."},
+	
+	# Filters / Effects
+	{"name": "Foto Lama (Sepia)", "tint": Color(0.7, 0.5, 0.3, 1.0), "desc": "Seperti di foto zaman dulu..."},
+	{"name": "Dunia Matrix", "tint": Color(0.0, 1.0, 0.0, 1.0), "desc": "Masuk ke dalam komputer..."},
+	{"name": "Negatif Film", "tint": Color(0.2, 0.2, 0.2, 1.0), "desc": "Seperti klise foto negatif..."} # Tricky!
 ]
 
 func _ready():
@@ -64,7 +75,12 @@ func _ready():
 func next_level():
 	feedback_label.text = ""
 	
-	var object_data = colors.pick_random()
+	# Determine color pool
+	var pool = colors_easy.duplicate()
+	if score >= 10:
+		pool += colors_hard
+	
+	var object_data = pool.pick_random()
 	var condition = conditions.pick_random()
 	
 	current_round = {
@@ -82,14 +98,26 @@ func next_level():
 	
 	condition_label.text = condition["desc"] + "\n(" + condition["name"] + ")"
 	
-	setup_buttons()
+	setup_buttons(pool)
 
-func setup_buttons():
+func setup_buttons(pool):
 	for child in buttons_container.get_children():
 		child.queue_free()
 	
-	var answers = colors.duplicate()
+	var answers = pool.duplicate()
 	answers.shuffle()
+	
+	# Limit buttons if pool is large
+	if answers.size() > 6:
+		var limited_answers = []
+		limited_answers.append(current_round["object"]) # Ensure correct answer
+		
+		for c in answers:
+			if c["name"] != current_round["object"]["name"] and limited_answers.size() < 6:
+				limited_answers.append(c)
+		
+		limited_answers.shuffle()
+		answers = limited_answers
 	
 	buttons_container.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	
@@ -126,7 +154,7 @@ func setup_buttons():
 			
 		# Connect SFX
 		# btn.mouse_entered.connect(AudioManager.play_button_hover) # Disabled per user request
-		btn.pressed.connect(AudioManager.play_button_click)
+
 		
 		btn.pressed.connect(_on_answer_selected.bind(color_data))
 		buttons_container.add_child(btn)

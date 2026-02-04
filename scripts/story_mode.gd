@@ -185,7 +185,7 @@ func setup_buttons(level_colors):
 		
 		# Connect SFX
 		# btn.mouse_entered.connect(AudioManager.play_button_hover) # Disabled per user request
-		btn.pressed.connect(AudioManager.play_button_click)
+
 		
 		btn.pressed.connect(_on_color_selected.bind(color_data))
 		buttons_container.add_child(btn)
@@ -246,7 +246,7 @@ func update_lives_ui():
 
 func game_over():
 	game_over_panel.show()
-	$GameOverPanel/Margin/VBoxContainer/FinalScoreLabel.text = "Skor: " + str(score)
+	$GameOverPanel/CenterContainer/Card/Margin/VBox/FinalScoreLabel.text = "Skor: " + str(score)
 	GameManager.update_high_score(score)
 
 func _on_restart_button_pressed():

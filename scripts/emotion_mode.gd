@@ -231,7 +231,7 @@ func setup_buttons():
 		
 		# Connect SFX
 		# btn.mouse_entered.connect(AudioManager.play_button_hover) # Disabled per user request
-		btn.pressed.connect(AudioManager.play_button_click)
+
 		
 		btn.pressed.connect(_on_color_selected.bind(color_data))
 		buttons_container.add_child(btn)
