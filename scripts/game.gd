@@ -146,19 +146,26 @@ func next_level():
 	current_time = max_time
 	
 	# Setup Question Pool
-	# Setup Question Pool
-	if score < 10:
-		# Basic Primary Colors (First 4-5)
-		current_level_color_set = colors_easy.slice(0, 4) # R, B, G, Y
-	elif score < 20:
-		# Add Secondary Colors
-		current_level_color_set = colors_easy.slice(0, 9) # + Purple, Orange, Black, White, Brown
-	elif score < 30:
-		# Add New Variations (Pink, Cyan, Teal)
-		current_level_color_set = colors_easy # All Easy colors
+	if mode == "stroop":
+		# Stroop Mode: High variety from the start
+		if score < 20:
+			current_level_color_set = colors_easy # All 12 basic+secondary colors
+		else:
+			current_level_color_set = colors_easy + colors_hard # Unleash everything
 	else:
-		# Add Hard Colors (Shades)
-		current_level_color_set = colors_easy + colors_hard
+		# Classic Mode: Gradual progression
+		if score < 10:
+			# Basic Primary Colors (First 4-5)
+			current_level_color_set = colors_easy.slice(0, 4) # R, B, G, Y
+		elif score < 20:
+			# Add Secondary Colors
+			current_level_color_set = colors_easy.slice(0, 9) # + Purple, Orange, Black, White, Brown
+		elif score < 30:
+			# Add New Variations (Pink, Cyan, Teal)
+			current_level_color_set = colors_easy # All Easy colors
+		else:
+			# Add Hard Colors (Shades)
+			current_level_color_set = colors_easy + colors_hard
 	
 	if background:
 		background.modulate = Color.WHITE # Default reset
