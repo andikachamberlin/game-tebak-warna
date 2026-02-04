@@ -134,6 +134,7 @@ func _on_answer_selected(selected_color):
 		handle_wrong()
 
 func handle_correct():
+	AudioManager.play_success()
 	feedback_label.text = "HEBAT! Mata yang tajam!"
 	feedback_label.modulate = Color.GREEN
 	
@@ -146,6 +147,7 @@ func handle_correct():
 	tween.tween_callback(next_level)
 
 func handle_wrong():
+	AudioManager.play_failed()
 	feedback_label.text = "Salah... Itu tadi " + current_round["object"]["name"]
 	feedback_label.modulate = Color.RED
 	

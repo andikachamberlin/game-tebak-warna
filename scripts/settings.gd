@@ -1,21 +1,41 @@
 extends Control
 
 @onready var back_button = $CenterContainer/VBoxContainer/BackButton
-@onready var volume_slider = $CenterContainer/VBoxContainer/VolumeHBox/VolumeSlider
+@onready var music_slider = $CenterContainer/VBoxContainer/MusicSlider
+@onready var sfx_slider = $CenterContainer/VBoxContainer/SFXSlider
 
 func _ready():
-	# Initialize slider value from current bus volume
-	var bus_index = AudioServer.get_bus_index("Master")
-	var volume_db = AudioServer.get_bus_volume_db(bus_index)
-	# Convert db to linear (0-1) for slider, assuming 0db is max or handling range
-	# db_to_linear is better
-	volume_slider.value = db_to_linear(volume_db)
+	# Initialize music slider
+	var music_bus = AudioServer.get_bus_index("Music")
+	# If bus doesn't exist (fallback), might be -1. Safe to check?
+	# Assuming AudioManager setup buses in project settings or script.
+	if music_bus != -1:
+		music_slider.value = db_to_linear(AudioServer.get_bus_volume_db(music_bus))
+	else:
+		# Fallback to master if Music bus not found
+		music_bus = AudioServer.get_bus_index("Master")
+		music_slider.value = db_to_linear(AudioServer.get_bus_volume_db(music_bus))
 
-func _on_volume_slider_value_changed(value):
-	var bus_index = AudioServer.get_bus_index("Master")
-	# Linear to db
+	# Initialize SFX slider
+	var sfx_bus = AudioServer.get_bus_index("SFX")
+	if sfx_bus != -1:
+		sfx_slider.value = db_to_linear(AudioServer.get_bus_volume_db(sfx_bus))
+	else:
+		sfx_bus = AudioServer.get_bus_index("Master")
+		sfx_slider.value = db_to_linear(AudioServer.get_bus_volume_db(sfx_bus))
+
+func _on_music_slider_value_changed(value):
+	var bus_index = AudioServer.get_bus_index("Music")
+	if bus_index == -1: bus_index = AudioServer.get_bus_index("Master")
+	
 	AudioServer.set_bus_volume_db(bus_index, linear_to_db(value))
-	# Mute if 0
+	AudioServer.set_bus_mute(bus_index, value == 0)
+
+func _on_sfx_slider_value_changed(value):
+	var bus_index = AudioServer.get_bus_index("SFX")
+	if bus_index == -1: bus_index = AudioServer.get_bus_index("Master")
+	
+	AudioServer.set_bus_volume_db(bus_index, linear_to_db(value))
 	AudioServer.set_bus_mute(bus_index, value == 0)
 
 func _on_back_button_pressed():

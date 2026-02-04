@@ -104,6 +104,7 @@ func _on_color_selected(selected_color_data):
 		handle_wrong()
 
 func handle_correct():
+	AudioManager.play_success()
 	feedback_label.text = "BENAR!"
 	feedback_label.modulate = Color.GREEN
 	update_score(score + 1)
@@ -113,6 +114,7 @@ func handle_correct():
 	tween.tween_callback(next_level)
 
 func handle_wrong():
+	AudioManager.play_failed()
 	feedback_label.text = "SALAH!"
 	feedback_label.modulate = Color.RED
 	lives -= 1

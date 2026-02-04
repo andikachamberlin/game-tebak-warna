@@ -4,6 +4,8 @@ var bgm_player: AudioStreamPlayer
 var sfx_players: Array[AudioStreamPlayer] = []
 
 var button_sfx = preload("res://assets/sfx/button.mp3")
+var success_sfx = preload("res://assets/sfx/success.mp3")
+var failed_sfx = preload("res://assets/sfx/failed.mp3")
 
 func play_button_click():
 	play_sfx(button_sfx, 0.0, 1.0)
@@ -12,10 +14,18 @@ func play_button_hover():
 	# Rekomendasi: Pitch sedikit lebih tinggi dan volume lebih kecil untuk hover
 	play_sfx(button_sfx, -5.0, 1.2)
 
+func play_success():
+	play_sfx(success_sfx, -2.0, 1.0)
+
+func play_failed():
+	play_sfx(failed_sfx, 0.0, 1.0)
+
 func _ready():
+	_setup_buses()
+	
 	# Setup BGM Player
 	bgm_player = AudioStreamPlayer.new()
-	bgm_player.bus = "Music" # Assumes "Music" bus exists, or defaults to Master if not found ideally
+	bgm_player.bus = "Music"
 	add_child(bgm_player)
 	
 	# Setup SFX Players Pool
@@ -24,13 +34,21 @@ func _ready():
 		p.bus = "SFX"
 		add_child(p)
 		sfx_players.append(p)
-		
-	# Ensure Buses exist (Fallback to Master if not)
+
+func _setup_buses():
+	# Create Music Bus if it doesn't exist
 	if AudioServer.get_bus_index("Music") == -1:
-		bgm_player.bus = "Master"
+		var count = AudioServer.bus_count
+		AudioServer.add_bus()
+		AudioServer.set_bus_name(count, "Music")
+		AudioServer.set_bus_send(count, "Master")
+	
+	# Create SFX Bus if it doesn't exist
 	if AudioServer.get_bus_index("SFX") == -1:
-		for p in sfx_players:
-			p.bus = "Master"
+		var count = AudioServer.bus_count
+		AudioServer.add_bus()
+		AudioServer.set_bus_name(count, "SFX")
+		AudioServer.set_bus_send(count, "Master")
 
 func play_music(stream: AudioStream, volume_db: float = 0.0):
 	if bgm_player.stream == stream and bgm_player.playing:

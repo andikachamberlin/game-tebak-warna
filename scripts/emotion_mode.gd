@@ -152,18 +152,21 @@ func _on_color_selected(selected_color_data):
 		handle_wrong()
 
 func handle_correct():
+	AudioManager.play_success()
 	feedback_label.text = "COCOK!"
 	feedback_label.modulate = Color.GREEN
 	explanation_label.text = current_question["valid_explanation"]
+	
 	update_score(score + 1)
 	
 	var tween = create_tween()
-	tween.tween_interval(1.5)
+	tween.tween_interval(2.0)
 	tween.tween_callback(next_level)
 
 func handle_wrong():
-	feedback_label.text = "MENARIK..."
-	feedback_label.modulate = Color.ORANGE
+	AudioManager.play_failed()
+	feedback_label.text = "KURANG TEPAT..."
+	feedback_label.modulate = Color.RED
 	explanation_label.text = current_question["wrong_explanation"]
 	
 	lives -= 1
